@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "string": "cpp",
+        "ostream": "cpp",
+        "random": "cpp",
+        "ratio": "cpp",
+        "exception": "cpp"
+    }
+}
