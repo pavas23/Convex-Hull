@@ -6,23 +6,32 @@ function App() {
   const [edges, setEdges] = useState([]);   // Array of edges (0: not included, 1: temporarily changes, 2: included in convex hull)
   const [leftPoint,setLeftPoint] = useState(0);
 
+  const handleStageClick = (event) => {
+    const { x, y } = event.target.getPointerPosition();
+    // const rect = event.target.getBoundingClientRect();
+    console.log(x,y)
+    // console.log("Left " + rect.left);
+    // console.log("Top " + rect.top);
+    const newPoints = [...points, { x, y }];
+    setPoints(newPoints);
+  };
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
 
     const rect = event.target.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    console.log(rect.left);
-    console.log(rect.top);
+    const x =( event.clientX - rect.left)*(event.target.width/rect.width);
+    const y = (event.clientY - rect.top)*(event.target.height/rect.height);
+    console.log("Left " + rect.left);
+    console.log("Top " + rect.top);
     console.log(event.clientX);
     console.log(event.clientY)
     console.log(x);
     console.log(y);
 
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'black';
     ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.arc(x, y, 3, 0, Math.PI*2);
     ctx.fill();
 
     // Add point to array
@@ -139,14 +148,26 @@ function computeConvexHull(points) {
   };
 
   const drawPoints = (ctx) => {
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'black';
     for (let point of points) {
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+      ctx.arc(point.x, point.y, 3, 0, Math.PI*2);
       ctx.fill();
     }
   };
 
+  const getWaypoints = (edge) =>{
+    var dx = edge.p2.x - edge.p1.x
+    var dy = edge.p2.y - edge.p1.y
+    var waypts = []
+    for(let i = 1;i<=60;i++){
+      var x = edge.p1.x + dx*i/60
+      var y = edge.p1.y + dy*i/60
+      waypts.push({x:x,y:y})
+    }
+
+    return waypts
+  }
   
   const drawCanvas = async () => {
     const canvas = document.getElementById('canvas');
@@ -156,11 +177,11 @@ function computeConvexHull(points) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw points
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'black';
     for (let point of points) {
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, 3, 0, Math.PI*2);
+    ctx.fill();
     }
 
     // Draw edges
@@ -182,10 +203,34 @@ function computeConvexHull(points) {
       finalTillNow.push(edge);
     }
 
-    ctx.beginPath();
-    ctx.moveTo(edge.p1.x, edge.p1.y);
-    ctx.lineTo(edge.p2.x, edge.p2.y);
-    ctx.stroke();
+    var waypts = getWaypoints(edge)
+    for(let t = 1;t<waypts.length;t++){
+      ctx.beginPath();
+      ctx.moveTo(waypts[t-1].x,waypts[t-1].y);
+      ctx.lineTo(waypts[t].x,waypts[t].y);
+      ctx.stroke();
+     await sleep(0.5)
+    }
+    // console.log(waypts)
+    // var t =1
+    // animate()
+    // function animate(){
+    //   if(t<=99){ requestAnimationFrame(animate);}
+    //   else return;
+    //   console.log(t,waypts[t-1],waypts[t])
+    //   ctx.beginPath();
+    //   ctx.moveTo(waypts[t-1].x,waypts[t-1].y);
+    //   ctx.lineTo(waypts[t].x,waypts[t].y);
+    //   ctx.stroke();
+    //   t++;
+    // }
+
+
+    // ctx.beginPath();
+    // ctx.moveTo(edge.p1.x, edge.p1.y);
+    // ctx.lineTo(x, y);
+    // ctx.stroke();
+    
 
     // Add a delay before drawing the next edge
     await sleep(500); // Adjust the delay time as needed
@@ -196,10 +241,21 @@ function computeConvexHull(points) {
   }
   };
 
+const clearCanvas = () =>{
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  setPoints([])
+  setEdges([])
+}
+
   return (
     <div className="App">
-    <canvas id="canvas" width="800" height="600" onClick={(event) => handleMouseClick(event, document.getElementById('canvas').getContext('2d'))}></canvas>
+    <canvas id="canvas" width="900" height="450" onClick={(event) => handleMouseClick(event, document.getElementById('canvas').getContext('2d'))}></canvas>
+    <div className='button-container'>
     <button onClick={() => drawCanvas()} className='redrawButton'>Generate Convex Hull</button>
+    <button onClick={() => clearCanvas()} className='redrawButton'>Clear Canvas</button>
+    </div>
   </div>
   );
 }

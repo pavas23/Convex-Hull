@@ -33,3 +33,9 @@ canvas {
 .redrawButton:hover {
   background-color: #0056b3; /* Change button background color on hover */
 }
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* Adjust this to change button alignment */
+}
