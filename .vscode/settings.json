@@ -5,6 +5,7 @@
         "ostream": "cpp",
         "random": "cpp",
         "ratio": "cpp",
-        "exception": "cpp"
+        "exception": "cpp",
+        "vector": "cpp"
     }
 }
