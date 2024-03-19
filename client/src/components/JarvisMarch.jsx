@@ -61,6 +61,19 @@ function JarvisMarch() {
     }
   };
 
+  const getWaypoints = (edge) => {
+    var dx = edge.p2.x - edge.p1.x;
+    var dy = edge.p2.y - edge.p1.y;
+    var waypts = [];
+    for (let i = 1; i <= 60; i++) {
+      var x = edge.p1.x + (dx * i) / 60;
+      var y = edge.p1.y + (dy * i) / 60;
+      waypts.push({ x: x, y: y });
+    }
+
+    return waypts;
+  };
+
   const drawCanvas = async () => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -91,10 +104,15 @@ function JarvisMarch() {
         finalTillNow.push(edge);
       }
 
-      ctx.beginPath();
-      ctx.moveTo(edge.p1.x, edge.p1.y);
-      ctx.lineTo(edge.p2.x, edge.p2.y);
-      ctx.stroke();
+      var waypts = getWaypoints(edge);
+
+      for (let t = 1; t < waypts.length; t++) {
+        ctx.beginPath();
+        ctx.moveTo(waypts[t - 1].x, waypts[t - 1].y);
+        ctx.lineTo(waypts[t].x, waypts[t].y);
+        ctx.stroke();
+        await sleep(0.5);
+      }
 
       // Add a delay before drawing the next edge
       await sleep(500); // Adjust the delay time as needed
