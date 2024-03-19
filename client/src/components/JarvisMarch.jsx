@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import '../css/JarvisMarch.css'
+import React, { useEffect, useState } from "react";
+import "../css/JarvisMarch.css";
+import computeConvexHull from "../algorithms/JarvisMarch";
 
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
@@ -12,7 +13,7 @@ function JarvisMarch() {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = "blue";
     ctx.beginPath();
     ctx.arc(x, y, 3, 0, Math.PI * 2);
     ctx.fill();
@@ -34,81 +35,16 @@ function JarvisMarch() {
     }
   }
 
-  //if edge is not included flag is 0
-  // if temporary changed flag is 1
-  // otherwise if included in final hull flag is 2
-  class Edge {
-    constructor(p1, p2, flag) {
-      this.p1 = p1;
-      this.p2 = p2;
-      this.flag = flag;
-    }
-  }
-
-  // To find orientation of ordered triplet (p, q, r).
-  // 0 if p, q and r are collinear
-  // 1 if clockwise
-  // 2 if counterclockwise
-  function orientation(p, q, r) {
-    const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-    if (val === 0) return 0; // collinear
-    return (val > 0) ? 1 : 2; // clock or counterclockwise
-  }
-
-  /**
-  * function to find convex hull for a given set of points
-  */
-  function computeConvexHull(points) {
-    const n = points.length;
-    // checking base case
-    if (n < 2) return [];
-    if (n === 2) {
-      return [new Edge(points[0], points[1], true)];
-    }
-
-    const edges = [];
-
-    // Find the leftmost point
-    let l = 0;
-    for (let i = 1; i < n; i++) {
-      if (points[i].x < points[l].x) {
-        l = i;
-      }
-    }
-
-    // Start from leftmost point, keep moving counterclockwise
-    // until reach the start point again.
-    let p = l, q;
-    do {
-      // If any point 'i' is more counterclock-wise than q, then update q.
-      q = (p + 1) % n;
-      for (let i = 0; i < n; i++) {
-        const edge = new Edge(points[p], points[i], 0);
-        if (orientation(points[p], points[i], points[q]) === 2) {
-          q = i;
-          edge.flag = 1;
-        }
-        edges.push(edge);
-      }
-
-      // As we are including the edge p-q and setting p as q for next iteration
-      edges.push(new Edge(points[p], points[q], 2));
-      p = q;
-    } while (p !== l);
-
-    return edges;
-  }
-
   // defining sleep function
   function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   const drawRemainingEdges = (ctx, edges) => {
     console.log(edges);
     for (var edge of edges) {
       console.log("weubre");
-      ctx.strokeStyle = 'green';
+      ctx.strokeStyle = "green";
       ctx.beginPath();
       ctx.moveTo(edge.p1.x, edge.p1.y);
       ctx.lineTo(edge.p2.x, edge.p2.y);
@@ -117,7 +53,7 @@ function JarvisMarch() {
   };
 
   const drawPoints = (ctx) => {
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = "blue";
     for (let point of points) {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
@@ -126,14 +62,14 @@ function JarvisMarch() {
   };
 
   const drawCanvas = async () => {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw points
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = "blue";
     for (let point of points) {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
@@ -147,11 +83,11 @@ function JarvisMarch() {
       const edge = edges[i];
 
       if (edge.flag === 0) {
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = "red";
       } else if (edge.flag === 1) {
-        ctx.strokeStyle = 'orange';
+        ctx.strokeStyle = "orange";
       } else {
-        ctx.strokeStyle = 'green';
+        ctx.strokeStyle = "green";
         finalTillNow.push(edge);
       }
 
@@ -171,8 +107,20 @@ function JarvisMarch() {
 
   return (
     <div className="App">
-      <canvas id="canvas" width="800" height="600" onClick={(event) => handleMouseClick(event, document.getElementById('canvas').getContext('2d'))}></canvas>
-      <button onClick={() => drawCanvas()} className='redrawButton'>Generate Convex Hull</button>
+      <canvas
+        id="canvas"
+        width="800"
+        height="600"
+        onClick={(event) =>
+          handleMouseClick(
+            event,
+            document.getElementById("canvas").getContext("2d")
+          )
+        }
+      ></canvas>
+      <button onClick={() => drawCanvas()} className="redrawButton">
+        Generate Convex Hull
+      </button>
     </div>
   );
 }
