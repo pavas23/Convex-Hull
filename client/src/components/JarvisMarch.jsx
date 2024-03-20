@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import computeConvexHull from "../algorithms/JarvisMarch";
-
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
-
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
@@ -69,9 +67,9 @@ function JarvisMarch() {
     var dx = edge.p2.x - edge.p1.x;
     var dy = edge.p2.y - edge.p1.y;
     var waypts = [];
-    for (let i = 1; i <= 60; i++) {
-      var x = edge.p1.x + (dx * i) / 60;
-      var y = edge.p1.y + (dy * i) / 60;
+    for (let i = 1; i <=60; i++) {
+      var x = edge.p1.x + (dx * i) /60;
+      var y = edge.p1.y + (dy * i) /60;
       waypts.push({ x: x, y: y });
     }
 
@@ -98,16 +96,20 @@ function JarvisMarch() {
     // Draw edges one by one with a delay
     for (let i = 0; i < edges.length; i++) {
       const edge = edges[i];
-
+      var oldGreenEdge;
+      var greenFlag = false
       if (edge.flag === 0) {
         ctx.strokeStyle = "red";
       } else if (edge.flag === 1) {
-        ctx.strokeStyle = "orange";
+        ctx.strokeStyle = "blue";
       } else {
         ctx.strokeStyle = "green";
+        if(finalTillNow.length>0){
+          oldGreenEdge = finalTillNow[finalTillNow.length-1]
+          greenFlag = true
+        } 
         finalTillNow.push(edge);
       }
-
       var waypts = getWaypoints(edge);
 
       for (let t = 1; t < waypts.length; t++) {
@@ -117,16 +119,93 @@ function JarvisMarch() {
         ctx.moveTo(waypts[t - 1].x, waypts[t - 1].y);
         ctx.lineTo(waypts[t].x, waypts[t].y);
         ctx.stroke();
-        await sleep(0.5);
-        t++;
+        await sleep(5);
+        t+=2;
       }
 
+      if(finalTillNow.length>0){
+        const pq = finalTillNow[finalTillNow.length-1]
+        const qr = edge
+        //if both have atmost one common point
+        if(!((
+          (pq.p1.x===qr.p1.x && pq.p1.y===qr.p1.y) &&
+         (pq.p2.x===qr.p2.x && pq.p2.y===qr.p2.y) 
+         )
+          || 
+          ((pq.p1.x===qr.p2.x && pq.p1.y===qr.p2.y) 
+          && (pq.p2.x===qr.p1.x && pq.p2.y===qr.p1.y))
+        ))
+        {
+            console.log(pq,qr)
+            var common_pt;
+            var other1,other2
+            if(pq.p1.x===qr.p1.x && pq.p1.y===qr.p1.y){
+              common_pt = pq.p1
+              other1 = pq.p2
+              other2 = qr.p2
+            }else if(pq.p2.x===qr.p2.x && pq.p2.y===qr.p2.y){
+              common_pt = pq.p2
+              other1 = pq.p1
+              other2 = qr.p1
+            }else if(pq.p1.x===qr.p2.x && pq.p1.y===qr.p2.y){
+              common_pt =  pq.p1
+              other1 = pq.p2
+              other2 = qr.p1
+            }else if(pq.p2.x===qr.p1.x && pq.p2.y===qr.p1.y){
+              common_pt = pq.p2
+              other1 = pq.p1
+              other2 = qr.p2
+            } 
+
+            console.log(common_pt)
+            ctx.beginPath()
+            var startAngle = Math.atan2(other1.y-common_pt.y,other1.x-common_pt.x)
+            var endAngle = Math.atan2(other2.y-common_pt.y,other2.x-common_pt.x)
+            ctx.arc(common_pt.x,common_pt.y,20,startAngle,endAngle,true)
+            ctx.lineWidth = 3
+            ctx.strokeStyle  = 'black'
+            ctx.stroke()
+
+
+         }
+      }
       // Add a delay before drawing the next edge
+      if(greenFlag){
+        var newGreenEdge = finalTillNow[finalTillNow.length-1]
+        if(newGreenEdge.p1.x===oldGreenEdge.p1.x && newGreenEdge.p1.y===oldGreenEdge.p1.y){
+          common_pt = newGreenEdge.p1
+          other1 = newGreenEdge.p2
+          other2 = oldGreenEdge.p2
+        }else if(newGreenEdge.p2.x===oldGreenEdge.p2.x && newGreenEdge.p2.y===oldGreenEdge.p2.y){
+          common_pt = newGreenEdge.p2
+          other1 = newGreenEdge.p1
+          other2 = oldGreenEdge.p1
+        }else if(newGreenEdge.p1.x===oldGreenEdge.p2.x && newGreenEdge.p1.y===oldGreenEdge.p2.y){
+          common_pt =  newGreenEdge.p1
+          other1 = newGreenEdge.p2
+          other2 = oldGreenEdge.p1
+        }else if(newGreenEdge.p2.x===oldGreenEdge.p1.x && newGreenEdge.p2.y===oldGreenEdge.p1.y){
+          common_pt = newGreenEdge.p2
+          other1 = newGreenEdge.p1
+          other2 = oldGreenEdge.p2
+        } 
+        ctx.beginPath()
+        var startAngle = Math.atan2(other1.y-common_pt.y,other1.x-common_pt.x)
+        var endAngle = Math.atan2(other2.y-common_pt.y,other2.x-common_pt.x)
+        ctx.arc(common_pt.x,common_pt.y,20,startAngle,endAngle,false)
+        ctx.lineWidth = 5
+        ctx.strokeStyle  = 'green'
+        ctx.stroke()
+  }
+
       await sleep(500); // Adjust the delay time as needed
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPoints(ctx);
       drawRemainingEdges(ctx, finalTillNow);
+
+     
+      
     }
   };
 
@@ -136,10 +215,55 @@ function JarvisMarch() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setPoints([])
     setEdges([])
+    
   }
+
+const playAnimation = ()=>{
+}
+
+const pauseAnimation = ()=>{
+  console.log("pause click")
+}
   return (
     <div className="App">
-      <canvas
+
+      <h1 className="title"> Jarvis March Algo</h1>
+      <div className="bubbles">
+        <span style={{"--i":11}}></span>
+        <span style={{"--i":12}}></span>
+        <span style={{"--i":31}}></span>
+        <span style={{"--i":26}}></span>
+        <span style={{"--i":22}}></span>
+        <span style={{"--i":17}}></span>
+        <span style={{"--i":19}}></span>
+        <span style={{"--i":20}}></span>
+        <span style={{"--i":21}}></span>
+        <span style={{"--i":26}}></span>
+        <span style={{"--i":27}}></span>
+        <span style={{"--i":23}}></span>
+        <span style={{"--i":28}}></span>
+        <span style={{"--i":15}}></span>
+        <span style={{"--i":14}}></span>
+        <span style={{"--i":17}}></span>
+        <span style={{"--i":29}}></span>
+        <span style={{"--i":18}}></span>
+        <span style={{"--i":11}}></span>
+        <span style={{"--i":12}}></span>
+        <span style={{"--i":31}}></span>
+        <span style={{"--i":26}}></span>
+        <span style={{"--i":22}}></span>
+        <span style={{"--i":17}}></span>
+        <span style={{"--i":19}}></span>
+        <span style={{"--i":20}}></span>
+        <span style={{"--i":21}}></span>
+        <span style={{"--i":20}}></span>
+        <span style={{"--i":21}}></span>
+
+        
+
+
+      </div>
+     <canvas
         id="canvas"
         width="800"
         height="600"
@@ -150,15 +274,26 @@ function JarvisMarch() {
           )
         }
       ></canvas>
-      <div className="buttonDiv">
+         <div className="buttonDiv">
       <button onClick={() => drawCanvas()} className="redrawButton">
       Generate Convex Hull
       </button>
       <button onClick={() => clearCanvas()} className="redrawButton">
        Clear Canvas
       </button>
+      {/* <button onClick={playAnimation} className="redrawButton">
+       Play Animation
+      </button>
+      <button onClick={pauseAnimation} className="redrawButton">
+       PauseAnimation
+      </button> */}
       </div>
-    </div>
+     </div>
+      
+
+   
+   
+    
   );
 }
 
