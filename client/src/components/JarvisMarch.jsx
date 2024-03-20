@@ -10,10 +10,12 @@ function JarvisMarch() {
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
     const rect = event.target.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    var scaleX = event.target.width / rect.width    // relationship bitmap vs. element for x
+    var scaleY = event.target.height / rect.height;  
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "black";
     ctx.beginPath();
     ctx.arc(x, y, 3, 0, Math.PI * 2);
     ctx.fill();
@@ -45,6 +47,8 @@ function JarvisMarch() {
     for (var edge of edges) {
       console.log("weubre");
       ctx.strokeStyle = "green";
+      ctx.lineWidth = 1
+      ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(edge.p1.x, edge.p1.y);
       ctx.lineTo(edge.p2.x, edge.p2.y);
@@ -53,7 +57,7 @@ function JarvisMarch() {
   };
 
   const drawPoints = (ctx) => {
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "black";
     for (let point of points) {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
@@ -82,7 +86,7 @@ function JarvisMarch() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw points
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "black";
     for (let point of points) {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
@@ -107,11 +111,14 @@ function JarvisMarch() {
       var waypts = getWaypoints(edge);
 
       for (let t = 1; t < waypts.length; t++) {
+        ctx.lineWidth = 1
+        ctx.lineCap = "round";
         ctx.beginPath();
         ctx.moveTo(waypts[t - 1].x, waypts[t - 1].y);
         ctx.lineTo(waypts[t].x, waypts[t].y);
         ctx.stroke();
         await sleep(0.5);
+        t++;
       }
 
       // Add a delay before drawing the next edge
@@ -123,6 +130,13 @@ function JarvisMarch() {
     }
   };
 
+  const clearCanvas = () => {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setPoints([])
+    setEdges([])
+  }
   return (
     <div className="App">
       <canvas
@@ -136,9 +150,14 @@ function JarvisMarch() {
           )
         }
       ></canvas>
+      <div className="buttonDiv">
       <button onClick={() => drawCanvas()} className="redrawButton">
-        Generate Convex Hull
+      Generate Convex Hull
       </button>
+      <button onClick={() => clearCanvas()} className="redrawButton">
+       Clear Canvas
+      </button>
+      </div>
     </div>
   );
 }
