@@ -90,32 +90,16 @@ canvas {
 }
 
 .title {
+  font-family: "Goudy Bookletter 1911", sans-serif;
   font-size: 25px;
   font-weight: 500;
   color: #553c9a;
-  /* border-right: 4px solid #000; This will be the blinking cursor */
-  /* margin: 0 0 58px; */
   margin-bottom: 0.5%;
   margin-top: 0.8%;
   z-index: 1;
-  animation: cursor 1s infinite step-end, typing 15s infinite steps(16);
   white-space: nowrap;
   overflow: hidden;
 }
-
-/* @keyframes cursor{
-  0%, 100%{border-color: transparent;}
-  50%{border-color: #000;}
-} */
-
-/* 
-@keyframes typing{
-  0%{ width: 0ch} 
-  30%{ width: 15ch;}
-  80%{ width: 16ch;}
-  90%{ width: 0ch;} 
-  100%{ width: 0ch;} 
-}  */
 
 
 

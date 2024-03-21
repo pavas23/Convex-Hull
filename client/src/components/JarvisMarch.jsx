@@ -6,6 +6,37 @@ function JarvisMarch() {
   const [edges, setEdges] = useState([]);
   const [disable,setDisable] = useState(false)
   // Function to handle mouse click event
+
+  const createRandomPoints = ()=>{
+    var canvas = document.getElementById("canvas")
+    var ctx = document.getElementById("canvas").getContext("2d")
+    var pts = 10
+    var ptsArr = []
+    const rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width    // relationship bitmap vs. element for x
+    var scaleY = canvas.height / rect.height;
+    var radius = rect.height/10
+    console.log(scaleX,scaleY)
+   while(pts--) {
+    
+    var pt_x =  Math.random()*(rect.right-rect.left+1) + rect.left
+    var pt_y = Math.random()*(rect.bottom-rect.top+1) + rect.top
+     
+    var x = (pt_x - rect.left) * scaleX;
+    var y = (pt_y - rect.top) * scaleY;
+    ptsArr = [...ptsArr,{x:x,y:y}]
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+   }
+   console.log(ptsArr)
+   ptsArr = [...points,...ptsArr]
+   setPoints(ptsArr)
+   const newEdges = computeConvexHull(ptsArr);
+    setEdges(newEdges);
+   return ptsArr
+  }
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
     const rect = event.target.getBoundingClientRect();
@@ -13,7 +44,7 @@ function JarvisMarch() {
     var scaleY = event.target.height / rect.height;  
     const x = (event.clientX - rect.left) * scaleX;
     const y = (event.clientY - rect.top) * scaleY;
-
+    console.log(scaleX,scaleY)
     ctx.fillStyle = "black";
     ctx.beginPath();
     ctx.arc(x, y, 3, 0, Math.PI * 2);
@@ -79,6 +110,7 @@ function JarvisMarch() {
 
   const drawCanvas = async () => {
     setDisable(true)
+    console.log(points)
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -283,6 +315,9 @@ const pauseAnimation = ()=>{
       </button>
       <button onClick={() => clearCanvas()} className="button-30" disabled={disable}>
        Clear Canvas
+      </button>
+      <button onClick={() => createRandomPoints()} className="button-30" disabled={disable}>
+       Random Points
       </button>
       {/* <button onClick={playAnimation} className="redrawButton">
        Play Animation
