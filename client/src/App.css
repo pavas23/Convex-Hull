@@ -1,14 +1,14 @@
 /* App.css */
-
 .App {
   text-align: center;
   background-color: #f0f0f0; /* Set the background color of the entire page */
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column; /* Align items vertically */
   justify-content: center;
   align-items: center;
+  
 }
 
 canvas {
@@ -34,9 +34,5 @@ canvas {
   background-color: #0056b3; /* Change button background color on hover */
 }
 
-.button-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;  /* Adjust this to change button alignment */
-}
+
 
