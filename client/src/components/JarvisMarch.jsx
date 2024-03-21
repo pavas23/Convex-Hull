@@ -4,6 +4,7 @@ import computeConvexHull from "../algorithms/JarvisMarch";
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [disable,setDisable] = useState(false)
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
@@ -77,6 +78,7 @@ function JarvisMarch() {
   };
 
   const drawCanvas = async () => {
+    setDisable(true)
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -207,6 +209,7 @@ function JarvisMarch() {
      
       
     }
+    setDisable(false)
   };
 
   const clearCanvas = () => {
@@ -227,7 +230,7 @@ const pauseAnimation = ()=>{
   return (
     <div className="App">
 
-      <h1 className="title"> Jarvis March Algo</h1>
+      <h1 className="title">Jarvis March Visualization</h1>
       <div className="bubbles">
         <span style={{"--i":11}}></span>
         <span style={{"--i":12}}></span>
@@ -275,10 +278,10 @@ const pauseAnimation = ()=>{
         }
       ></canvas>
          <div className="buttonDiv">
-      <button onClick={() => drawCanvas()} className="redrawButton">
+      <button onClick={() => drawCanvas()} className="button-30" disabled={disable}>
       Generate Convex Hull
       </button>
-      <button onClick={() => clearCanvas()} className="redrawButton">
+      <button onClick={() => clearCanvas()} className="button-30" disabled={disable}>
        Clear Canvas
       </button>
       {/* <button onClick={playAnimation} className="redrawButton">

@@ -19,13 +19,15 @@ canvas {
   /* border: 2px solid #333; */
   background-color: #fff;
   margin-top: 1%;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 25px 50px -10px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 25px 50px -10px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   z-index: 2;
 }
 
 .redrawButton {
-  margin-top: 1%;
   padding: 10px 20px;
+  margin-top: 1%;
   margin-left: 10px;
   margin-bottom: 1%;
   background-color: #007bff;
@@ -41,6 +43,13 @@ canvas {
   background-color: #0056b3;
 }
 
+.redrawButton:disabled,
+.redrawButton[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .buttonDiv {
   display: flex;
   flex-direction: row;
@@ -48,14 +57,13 @@ canvas {
   margin-top: 1%;
 }
 
-.bubbles{
+.bubbles {
   position: relative;
   display: flex;
   height: 0px;
 }
 
-.bubbles span 
-{
+.bubbles span {
   z-index: 0;
   position: relative;
   width: 30px;
@@ -63,32 +71,110 @@ canvas {
   background-color: #4fc3dc;
   margin: 0 4px;
   border-radius: 50%;
-  box-shadow: 0 0 0 10px #4fc3dc44,
-  0 0 50px #4fc3dc, 0 0 100px #4fc3dc;
+  box-shadow: 0 0 0 10px #4fc3dc44, 0 0 50px #4fc3dc, 0 0 100px #4fc3dc;
   animation: animate 15s linear infinite;
   animation-duration: calc(125s / var(--i));
-
 }
-.bubbles span:nth-child(even){
+.bubbles span:nth-child(even) {
   background-color: #ff2d75;
-  box-shadow: 0 0 0 10px #ff2d7544,
-  0 0 50px #ff2d75, 0 0 100px #ff2d75;
-
+  box-shadow: 0 0 0 10px #ff2d7544, 0 0 50px #ff2d75, 0 0 100px #ff2d75;
 }
 @keyframes animate {
-    0%{
-      transform: translateY(100vh) scale(0);
+  0% {
+    transform: translateY(100vh) scale(0);
+  }
 
-    }
-
-    100%{
-      transform: translateY(-10vh) scale(1);
-      
-    }
+  100% {
+    transform: translateY(-10vh) scale(1);
+  }
 }
 
-.title{
+.title {
+  font-size: 25px;
+  font-weight: 500;
+  color: #553c9a;
+  /* border-right: 4px solid #000; This will be the blinking cursor */
+  /* margin: 0 0 58px; */
   margin-bottom: 0.5%;
   margin-top: 0.8%;
   z-index: 1;
+  animation: cursor 1s infinite step-end, typing 15s infinite steps(16);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* @keyframes cursor{
+  0%, 100%{border-color: transparent;}
+  50%{border-color: #000;}
+} */
+
+/* 
+@keyframes typing{
+  0%{ width: 0ch} 
+  30%{ width: 15ch;}
+  80%{ width: 16ch;}
+  90%{ width: 0ch;} 
+  100%{ width: 0ch;} 
+}  */
+
+
+
+
+/* CSS */
+.button-30 {
+  margin-top: 1%;
+  margin-left: 10px;
+  margin-bottom: 1%;
+  align-items: center;
+  appearance: none;
+  background-color: #fcfcfd;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #36395a;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono", monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 15px;
+}
+
+.button-30:focus {
+  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #d6d6e7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+.button-30:disabled,
+.button-30[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
