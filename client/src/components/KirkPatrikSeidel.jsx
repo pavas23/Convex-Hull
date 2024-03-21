@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
-import KPS from "../algorithms/KirkPatrikSeidel";
+import {KPS} from "../algorithms/KPS1.ts";
 
 class Point {
   constructor(x, y) {
@@ -44,10 +44,10 @@ function KirkPatrikSeidel() {
 
   // Function to draw the edges on the canvas
   const drawEdges = (ctx) => {
-    ctx.strokeStyle = "green";
-    ctx.lineWidth = 1;
-    ctx.lineCap = "round";
     for (let edge of edges) {
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 1;
+      ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(edge[0].x, edge[0].y);
       ctx.lineTo(edge[1].x, edge[1].y);

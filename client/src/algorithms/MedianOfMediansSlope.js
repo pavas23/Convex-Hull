@@ -4,8 +4,16 @@ class Point {
       this.y = y;
     }
   }
+
+  function scam(arr,low,high,k){
+    arr.sort((a,b)=>a-b);
+    k = Math.ceil(k);
+    console.log(k-1+low);
+    return arr[k-1+low];
+  }
   
   function kthSmallestElementSlope(arr, low, high, k) {
+    return scam(arr,low,high,k);
     k = Math.ceil(k);
     if (k > 0 && k <= high - low + 1) {
       let n = high - low + 1;

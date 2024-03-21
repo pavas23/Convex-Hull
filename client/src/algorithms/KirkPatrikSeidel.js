@@ -82,13 +82,14 @@ function UpperBridge(T, l) {
     var equal = [];
     var large = [];
 
+    const EPSILON = 1e-9;
     for (var pair of pairs) {
         var slope = 0;
         if (T[pair[0]].x !== T[pair[1]].x) {
             var slope = (T[pair[1]].y - T[pair[0]].y) / (T[pair[1]].x - T[pair[0]].x);
             if (slope < k) {
                 small.push(pair);
-            } else if (slope === k) {
+            } else if (Math.abs(slope - k) < EPSILON) {
                 equal.push(pair);
             } else {
                 large.push(pair);
@@ -295,13 +296,14 @@ function LowerBridge(T, l) {
     var equal = [];
     var large = [];
 
+    const EPSILON = 1e-9;
     for (var pair of pairs) {
         var slope = 0;
         if (T[pair[0]].x !== T[pair[1]].x) {
             var slope = (T[pair[1]].y - T[pair[0]].y) / (T[pair[1]].x - T[pair[0]].x);
             if (slope < k) {
                 small.push(pair);
-            } else if (slope == k) {
+            } else if (Math.abs(slope - k) < EPSILON) {
                 equal.push(pair);
             } else {
                 large.push(pair);
@@ -427,14 +429,15 @@ function LowerHull(pmin, pmax, T) {
     }
 
     // recursive call on left and right halves
-    var leftList = (T_right.length >= 2) ? LowerHull(pmax, pr, T_right) : [T_right[0]];
-    var rightList = (T_left.length >= 2) ? LowerHull(pl, pmin, T_left) : [T_left[0]];
+    var rightList = (T_right.length >= 2) ? LowerHull(pmax, pr, T_right) : [T_right[0]];
+    var leftList = (T_left.length >= 2) ? LowerHull(pl, pmin, T_left) : [T_left[0]];
 
-    var lowerHullAns = [...leftList, ...rightList]
+    var lowerHullAns = [...rightList, ...leftList]
     return lowerHullAns;
 }
 
 function KPS(points) {
+    console.log(points);
     // converting points to point class
 
     var pu_min = new Point();
@@ -489,19 +492,19 @@ function KPS(points) {
         }
     }
 
-    // call upper-hull function
-    var upperHullAns = UpperHull(pu_min, pu_max, setT_UpperHull);
-    console.log("upper hull ans",upperHullAns);
-
     var setT_LowerHull = [];
     setT_LowerHull.push(pl_min);
     setT_LowerHull.push(pl_max);
 
-    for (var point in points) {
+    for (var point of points) {
         if (point.x > pl_min.x && point.x < pl_max.x) {
             setT_LowerHull.push(point);
         }
     }
+
+    // call upper-hull function
+    var upperHullAns = UpperHull(pu_min, pu_max, setT_UpperHull);
+    console.log("upper hull ans",upperHullAns);
 
     // call lower-hull function
     var lowerHullAns = LowerHull(pl_min, pl_max, setT_LowerHull);
@@ -511,6 +514,8 @@ function KPS(points) {
     var convexHull = [];
     for (var point of upperHullAns) convexHull.push(point);
     for (var point of lowerHullAns) convexHull.push(point);
+
+    console.log("convex  hull points are",convexHull);
 
     var edges = [];
     for (var i = 0; i < convexHull.length - 1; i++) {

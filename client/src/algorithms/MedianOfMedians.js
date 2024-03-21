@@ -5,7 +5,14 @@ class Point {
   }
 }
 
+function scam(arr,low,high,k){
+  arr.sort((a,b)=>a.x-b.x);
+  k = Math.ceil(k);
+  return arr[k-1+low];
+}
+
 function kthSmallestElement(arr, low, high, k) {
+  return scam(arr,low,high,k);
   k = Math.ceil(k);
   if (k > 0 && k <= high - low + 1) {
     let n = high - low + 1;
