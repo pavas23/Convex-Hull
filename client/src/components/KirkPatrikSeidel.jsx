@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
-import {KPS} from "../algorithms/KPS1.ts";
+import {KPS} from "../algorithms/kps.ts";
 
 class Point {
   constructor(x, y) {
@@ -81,6 +81,8 @@ function KirkPatrikSeidel() {
 
   // Function to run KPS algorithm and update edges
   const generateConvexHull = () => {
+    points.sort((a, b) => a.x-b.x)
+    console.log(points)
     const newEdges = KPS(points);
     setEdges(newEdges);
     drawCanvas();
