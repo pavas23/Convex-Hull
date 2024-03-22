@@ -266,12 +266,7 @@ function JarvisMarch() {
     
   }
 
-const playAnimation = ()=>{
-}
 
-const pauseAnimation = ()=>{
-  console.log("pause click")
-}
   return (
     <div className="App">
 
@@ -324,8 +319,11 @@ const pauseAnimation = ()=>{
       ></canvas>
          <div className="buttonDiv">
       <button onClick={() =>{
+        speed.speed = 60
         start.start = true
         setStartBtn(true)
+        setSlowDown(false)
+        setSpeedUp(false)
          drawCanvas(start,speed)
 
       } 
