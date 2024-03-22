@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import computeConvexHull from "../algorithms/JarvisMarch";
+var start = {start:true}
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
   const [disable,setDisable] = useState(false)
+  const [startBtn,setStartBtn] = useState(start.start)
+  function getStart() {
+    return start
+  }
   // Function to handle mouse click event
 
   const createRandomPoints = ()=>{
@@ -108,7 +113,12 @@ function JarvisMarch() {
     return waypts;
   };
 
-  const drawCanvas = async () => {
+  const stopExec = async (obj) => {
+    while(!obj.start){
+      await sleep(1000)
+    }
+  }
+  const drawCanvas = async (obj) => {
     setDisable(true)
     console.log(points)
     const canvas = document.getElementById("canvas");
@@ -237,8 +247,8 @@ function JarvisMarch() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPoints(ctx);
       drawRemainingEdges(ctx, finalTillNow);
-
-     
+      console.log(obj)
+      await stopExec(obj)
       
     }
     setDisable(false)
@@ -310,7 +320,13 @@ const pauseAnimation = ()=>{
         }
       ></canvas>
          <div className="buttonDiv">
-      <button onClick={() => drawCanvas()} className="button-30" disabled={disable}>
+      <button onClick={() =>{
+        start.start = true
+        setStartBtn(true)
+         drawCanvas(start)
+
+      } 
+     } className="button-30" disabled={disable}>
       Generate Convex Hull
       </button>
       <button onClick={() => clearCanvas()} className="button-30" disabled={disable}>
@@ -318,6 +334,13 @@ const pauseAnimation = ()=>{
       </button>
       <button onClick={() => createRandomPoints()} className="button-30" disabled={disable}>
        Random Points
+      </button>
+      <button onClick={() => {
+        console.log('clk',start)
+        start.start = !start.start
+        setStartBtn(!startBtn)
+        }} className="button-30" >
+       {startBtn ? 'Stop' : 'Start'}
       </button>
       {/* <button onClick={playAnimation} className="redrawButton">
        Play Animation
