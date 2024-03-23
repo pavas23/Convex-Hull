@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import computeConvexHull from "../algorithms/JarvisMarch";
+var start = {start:true}
+var speed = {speed : 60}
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
   const [disable,setDisable] = useState(false)
+  const [startBtn,setStartBtn] = useState(start.start)
+  const [speedUp,setSpeedUp] = useState(false)
+  const [slowDown,setSlowDown] = useState(false)
+  function getStart() {
+    return start
+  }
   // Function to handle mouse click event
 
   const createRandomPoints = ()=>{
@@ -95,20 +103,25 @@ function JarvisMarch() {
     }
   };
 
-  const getWaypoints = (edge) => {
+  const getWaypoints = (edge,obj) => {
     var dx = edge.p2.x - edge.p1.x;
     var dy = edge.p2.y - edge.p1.y;
     var waypts = [];
-    for (let i = 1; i <=60; i++) {
-      var x = edge.p1.x + (dx * i) /60;
-      var y = edge.p1.y + (dy * i) /60;
+    for (let i = 1; i <=obj.speed; i++) {
+      var x = edge.p1.x + (dx * i) /obj.speed;
+      var y = edge.p1.y + (dy * i) /obj.speed;
       waypts.push({ x: x, y: y });
     }
 
     return waypts;
   };
 
-  const drawCanvas = async () => {
+  const stopExec = async (obj) => {
+    while(!obj.start){
+      await sleep(1000)
+    }
+  }
+  const drawCanvas = async (startObj,speedObj) => {
     setDisable(true)
     console.log(points)
     const canvas = document.getElementById("canvas");
@@ -144,7 +157,7 @@ function JarvisMarch() {
         } 
         finalTillNow.push(edge);
       }
-      var waypts = getWaypoints(edge);
+      var waypts = getWaypoints(edge,speedObj);
 
       for (let t = 1; t < waypts.length; t++) {
         ctx.lineWidth = 1
@@ -234,11 +247,11 @@ function JarvisMarch() {
 
       await sleep(500); // Adjust the delay time as needed
 
+      await stopExec(startObj)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPoints(ctx);
       drawRemainingEdges(ctx, finalTillNow);
-
-     
+      console.log(startObj)
       
     }
     setDisable(false)
@@ -253,12 +266,7 @@ function JarvisMarch() {
     
   }
 
-const playAnimation = ()=>{
-}
 
-const pauseAnimation = ()=>{
-  console.log("pause click")
-}
   return (
     <div className="App">
 
@@ -310,7 +318,16 @@ const pauseAnimation = ()=>{
         }
       ></canvas>
          <div className="buttonDiv">
-      <button onClick={() => drawCanvas()} className="button-30" disabled={disable}>
+      <button onClick={() =>{
+        speed.speed = 60
+        start.start = true
+        setStartBtn(true)
+        setSlowDown(false)
+        setSpeedUp(false)
+         drawCanvas(start,speed)
+
+      } 
+     } className="button-30" disabled={disable}>
       Generate Convex Hull
       </button>
       <button onClick={() => clearCanvas()} className="button-30" disabled={disable}>
@@ -319,12 +336,37 @@ const pauseAnimation = ()=>{
       <button onClick={() => createRandomPoints()} className="button-30" disabled={disable}>
        Random Points
       </button>
-      {/* <button onClick={playAnimation} className="redrawButton">
-       Play Animation
+      <button onClick={() => {
+        console.log('clk',start)
+        start.start = !start.start
+        setStartBtn(!startBtn)
+        }} className="button-30"  >
+       {startBtn ? 'Stop' : 'Start'}
       </button>
-      <button onClick={pauseAnimation} className="redrawButton">
-       PauseAnimation
-      </button> */}
+      <button onClick={()=>{
+        if(speed.speed > 60) {
+          setSlowDown(false)
+          speed.speed = 60
+        }
+        else if (speed.speed > 20) {
+          speed.speed = 20
+          setSpeedUp(true)
+        }
+      }} className="button-30" disabled={speedUp}>
+       Speed Up
+      </button>
+      <button onClick={()=>{
+        if(speed.speed < 60) {
+          setSpeedUp(false)  
+          speed.speed =60
+        }
+        else if(speed.speed< 150) {
+          setSlowDown(true)  
+          speed.speed = 150
+        }
+      }} className="button-30" disabled={slowDown}>
+       Slow Down
+      </button>
       </div>
      </div>
       

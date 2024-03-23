@@ -27,7 +27,7 @@ const LandingPage = () => {
               <Entry str={"2021A7PS0109H"}/>
             </div>
           </div>
-          <Link to="/Jarvis-March-Visualization" className="button-31" disabled={false}>
+          <Link to="/introduction" className="button-31" disabled={false}>
        Let's Go!
       </Link>
         </div>
