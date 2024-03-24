@@ -34,11 +34,21 @@ function Gcd(a, b) {
 }
 function getMedian(arr) {
     arr.sort(function (a, b) { return a.x - b.x; });
-    return arr[Math.ceil(arr.length / 2) - 1];
+    if (arr.length % 2 == 0) {
+        var p1 = arr[Math.ceil(arr.length / 2) - 1];
+        var p2 = arr[Math.ceil(arr.length / 2)];
+        return new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+    }
+    else {
+        return arr[Math.ceil(arr.length / 2) - 1];
+    }
 }
 function upperBridge(T, a) {
     var candidates = new Set();
     console.log("T", T);
+    if (T.length === 1) {
+        return T;
+    }
     if (T.length === 2) {
         T.sort(function (a, b) { return a.x - b.x; });
         return T;
@@ -48,8 +58,8 @@ function upperBridge(T, a) {
         for (var i = 0; i < T.length - 1; i += 2) {
             var pair = [T[i], T[i + 1]];
             pair.sort(function (a, b) { return a.x - b.x; });
-            var temp_2 = new Pair(pair[0], pair[1]);
-            pairs.push(temp_2);
+            var temp = new Pair(pair[0], pair[1]);
+            pairs.push(temp);
         }
     }
     else {
@@ -57,8 +67,8 @@ function upperBridge(T, a) {
         for (var i = 1; i < T.length - 1; i += 2) {
             var pair = [T[i], T[i + 1]];
             pair.sort(function (a, b) { return a.x - b.x; });
-            var temp_3 = new Pair(pair[0], pair[1]);
-            pairs.push(temp_3);
+            var temp = new Pair(pair[0], pair[1]);
+            pairs.push(temp);
         }
     }
     console.log("pairs", pairs);
@@ -90,6 +100,14 @@ function upperBridge(T, a) {
             slopes.push([dy, dx]);
         }
     }
+    // if (slopes.length == 0) {
+    //     var arr: Point[] = [];
+    // candidates.forEach(value => {
+    //     arr.push(value);
+    // });
+    // arr.sort((a,b)=>a.x-b.x)
+    //     return upperBridge(arr, a);
+    // }
     slopes.sort(function (a, b) { return a[0] * b[1] - a[1] * b[0]; });
     console.log("slopes", slopes);
     var median_slope = [];
@@ -146,6 +164,7 @@ function upperBridge(T, a) {
     for (var _c = 0, T_2 = T; _c < T_2.length; _c++) {
         var point = T_2[_c];
         var intercept = point.y * median_slope[1] - point.x * median_slope[0];
+        console.log(point, intercept);
         if (intercept === maxIntercept) {
             maxSet.push(point);
         }
@@ -205,6 +224,7 @@ function upperBridge(T, a) {
 }
 function UpperHull(pu_min, pu_max, T) {
     var a = getMedian(__spreadArray([], T, true));
+    T.sort(function (a, b) { return a.x - b.x; });
     console.log("a", a);
     var T_left = [];
     var T_right = [];
@@ -246,6 +266,8 @@ function UpperHull(pu_min, pu_max, T) {
     return final;
 }
 function KPS(points) {
+    console.log(points);
+    points.sort(function (a, b) { return a.x - b.x; });
     var pu_min = new Point(Number.MAX_VALUE, Number.MIN_SAFE_INTEGER);
     var pu_max = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
     var pl_min = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
@@ -320,46 +342,3 @@ function KPS(points) {
     return edges;
 }
 exports.KPS = KPS;
-// var temp = [[20,44],
-//     [-2,-20],
-//     [12,28],
-//     [10,32],
-//     [46,48],
-//     [30,-44],
-//     [8,50]]
-var temp = [[415.55555555555554, 40.3125],
-    [597.7777777777777, 61.64583333333333],
-    [692.8888888888888, 265.6458333333333],
-    [641.3333333333333, 508.3125],
-    [433.3333333333333, 508.3125],
-    [271.55555555555554, 469.6458333333333],
-    [211.1111111111111, 250.97916666666666],
-    [244.88888888888889, 65.64583333333333],
-];
-// var temp  = [[300, 320.85416666666663],[366.66666666666663,119.52083333333333],[540,316.85416666666663]]
-// {x: 415.55555555555554, y: 40.3125}
-// {x: 597.7777777777777, y: 61.64583333333333}
-// {x: 692.8888888888888, y: 265.6458333333333}
-// {x: 641.3333333333333, y: 508.3125}
-// {x: 433.3333333333333, y: 508.3125}
-// {x: 271.55555555555554, y: 469.6458333333333}
-// {x: 211.1111111111111, y: 250.97916666666666}
-// {x: 244.88888888888889, y: 65.64583333333333}
-var Pts = [];
-for (var _i = 0, temp_1 = temp; _i < temp_1.length; _i++) {
-    var t = temp_1[_i];
-    Pts.push(new Point(t[0], t[1]));
-}
-Pts.sort(function (a, b) { return a.x - b.x; });
-// KPS(Pts);
-/*
-300, y: 320.85416666666663}
-1
-:
-Point {x: 366.66666666666663, y: 119.52083333333333}
-2
-:
-Point {x: 540, y: 316.85416666666663
-
-*/
-console.log(KPS(Pts));

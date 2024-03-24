@@ -26,12 +26,21 @@ function Gcd(a: number, b: number):number{
 }
 function getMedian(arr: Point[]): Point{
     arr.sort((a, b) => a.x-b.x);
-    return arr[Math.ceil(arr.length/2)-1]
+    if(arr.length%2==0){
+        var p1 = arr[Math.ceil(arr.length/2)-1]
+        var p2 = arr[Math.ceil(arr.length/2)]
+        return new Point((p1.x+p2.x)/2,(p1.y+p2.y)/2)
+    }else {
+        return arr[Math.ceil(arr.length/2)-1]
+    }
 }
 
 function upperBridge(T: Point[], a: Point): Point[]{
     let candidates: Set<Point> = new Set();
     console.log("T",T);
+    if(T.length === 1){
+        return T;
+    }
     if(T.length === 2){
         T.sort((a, b)=> a.x-b.x);
         return T;
@@ -99,7 +108,6 @@ function upperBridge(T: Point[], a: Point): Point[]{
         var s2 = slopes[Math.ceil(slopes.length/2)];
         median_slope = [s1[0]*s2[1]+s1[1]*s2[0],2*s1[1]*s2[1]]
     }else{
-
         median_slope = slopes[Math.ceil(slopes.length/2)-1];
     }
     console.log('median slope',median_slope)
@@ -145,6 +153,7 @@ function upperBridge(T: Point[], a: Point): Point[]{
     console.log("maxintercept", maxIntercept);
     for(let point of T){
         var intercept = point.y*median_slope[1] - point.x*median_slope[0];
+        console.log(point,intercept)
         if(intercept === maxIntercept){
             maxSet.push(point);
         }
@@ -200,6 +209,7 @@ function upperBridge(T: Point[], a: Point): Point[]{
 
 function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
     var a = getMedian([...T])
+    T.sort((a,b)=> a.x-b.x)
     console.log("a", a);
     var T_left: Point[] = []
     var T_right: Point[] = []
@@ -217,12 +227,12 @@ function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
     var pr = bridge[1];
     var T_new_left: Point[] = [];
     var T_new_right: Point[] = [];
-    for (let point of T){
+    for (let point of T_left){
         if(point.x<pl.x){
             T_new_left.push(point);
         }
     }
-    for (let point of T){
+    for (let point of T_right){
         if(point.x>pr.x){
             T_new_right.push(point);
         }
@@ -240,6 +250,8 @@ function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
 }
 
 function KPS(points: Point[]): [Point, Point][] {
+    console.log(points);
+    points.sort((a, b) => a.x-b.x)
     let pu_min = new Point(Number.MAX_VALUE, Number.MIN_SAFE_INTEGER);
     let pu_max = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
     let pl_min = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
@@ -323,15 +335,15 @@ function KPS(points: Point[]): [Point, Point][] {
 //     [30,-44],
 //     [8,50]]
 
-var temp = [[415.55555555555554, 40.3125],
-[597.7777777777777,61.64583333333333],
-[692.8888888888888,265.6458333333333],
-[641.3333333333333,508.3125],
-[433.3333333333333,508.3125],
-[271.55555555555554,469.6458333333333],
-[211.1111111111111,250.97916666666666],
-[244.88888888888889,65.64583333333333],
-]
+// var temp = [[415.55555555555554, 40.3125],
+// [597.7777777777777,61.64583333333333],
+// [692.8888888888888,265.6458333333333],
+// [641.3333333333333,508.3125],
+// [433.3333333333333,508.3125],
+// [271.55555555555554,469.6458333333333],
+// [211.1111111111111,250.97916666666666],
+// [244.88888888888889,65.64583333333333],
+// ]
 // var temp  = [[300, 320.85416666666663],[366.66666666666663,119.52083333333333],[540,316.85416666666663]]
 // {x: 415.55555555555554, y: 40.3125}
 // {x: 597.7777777777777, y: 61.64583333333333}
@@ -342,12 +354,12 @@ var temp = [[415.55555555555554, 40.3125],
 // {x: 211.1111111111111, y: 250.97916666666666}
 // {x: 244.88888888888889, y: 65.64583333333333}
 
-var Pts: Point[] = [];
+// var Pts: Point[] = [];
 
-for(let t of temp){
-    Pts.push(new Point(t[0], t[1]))
-}
-Pts.sort((a, b)=>a.x-b.x);
+// for(let t of temp){
+//     Pts.push(new Point(t[0], t[1]))
+// }
+// Pts.sort((a, b)=>a.x-b.x);
 // KPS(Pts);
 
 /*
@@ -360,5 +372,5 @@ Point {x: 366.66666666666663, y: 119.52083333333333}
 Point {x: 540, y: 316.85416666666663
 
 */
-console.log(KPS(Pts))
+// console.log(KPS(Pts))
 export {KPS}
