@@ -32,6 +32,7 @@ function getMedian(arr: Point[]): Point{
 function upperBridge(T: Point[], a: Point): Point[]{
     let candidates: Set<Point> = new Set();
     console.log("T",T);
+    if(T.length==1) return T
     if(T.length === 2){
         T.sort((a, b)=> a.x-b.x);
         return T;
@@ -199,6 +200,7 @@ function upperBridge(T: Point[], a: Point): Point[]{
 }
 
 function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
+    if(pu_max.x==pu_min.x && pu_max.y==pu_min.y) return [pu_min]
     var a = getMedian([...T])
     console.log("a", a);
     var T_left: Point[] = []
@@ -213,8 +215,18 @@ function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
     }
     console.log("tleft", T_left, "tright", T_right);
     var bridge = upperBridge(T, a);
+    if(bridge.length==1) return [pu_min,pu_max]
     var pl = bridge[0];
     var pr = bridge[1];
+    if(pl.x > pr.x){
+        var temp = pl;
+        pl = pr
+        pr = temp
+    }else if(pl.x == pr.x && pl.y > pr.y){
+        var temp = pl;
+        pl = pr
+        pr = temp
+    }
     var T_new_left: Point[] = [];
     var T_new_right: Point[] = [];
     for (let point of T){
