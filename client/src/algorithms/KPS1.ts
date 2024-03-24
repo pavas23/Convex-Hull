@@ -610,6 +610,7 @@ function KPS(points: Point[]): [Point, Point][] {
     convexHull.push(pl_max);
     for (let point of lowerHullAns) convexHull.push(point);
     convexHull.push(pl_min);
+    convexHull.push(pu_min);
 
     console.log("convex hull points are", convexHull);
 

@@ -12,6 +12,8 @@ class Point {
 function KirkPatrikSeidel() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [height,setHeight] = useState(0);
+  const [scaleYState,setScaleYState] = useState(0);
 
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
@@ -20,24 +22,28 @@ function KirkPatrikSeidel() {
     var scaleX = event.target.width / rect.width; // relationship bitmap vs. element for x
     var scaleY = event.target.height / rect.height;
     const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+    const y = (rect.height - (event.clientY - rect.top)) * scaleY;
+    setHeight(rect.height);
+    setScaleYState(scaleY);
 
     ctx.fillStyle = "black";
     ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.arc(x, rect.height*scaleY - y, 3, 0, Math.PI * 2);
     ctx.fill();
 
     // Add point to array
+    console.log( new Point(x, y));
     var newPoints = [...points, new Point(x, y)];
     setPoints(newPoints);
   };
+
 
   // Function to draw the points on the canvas
   const drawPoints = (ctx) => {
     ctx.fillStyle = "black";
     for (let point of points) {
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+      ctx.arc(point.x, height*scaleYState-point.y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
   };
@@ -49,8 +55,8 @@ function KirkPatrikSeidel() {
       ctx.lineWidth = 1;
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(edge[0].x, edge[0].y);
-      ctx.lineTo(edge[1].x, edge[1].y);
+      ctx.moveTo(edge[0].x,height*scaleYState - edge[0].y);
+      ctx.lineTo(edge[1].x,height*scaleYState - edge[1].y);
       ctx.stroke();
     }
   };
