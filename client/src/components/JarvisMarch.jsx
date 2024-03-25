@@ -271,7 +271,7 @@ function JarvisMarch() {
     <div className="App">
 
       <h1 className="title">Jarvis March Visualization</h1>
-      <div className="bubbles">
+      {/* <div className="bubbles">
         <span style={{"--i":11}}></span>
         <span style={{"--i":12}}></span>
         <span style={{"--i":31}}></span>
@@ -305,7 +305,7 @@ function JarvisMarch() {
         
 
 
-      </div>
+      </div> */}
      <canvas
         id="canvas"
         width="800"
