@@ -200,7 +200,7 @@ function upperBridge(T: Point[], a: Point): Point[]{
     candidates.forEach(value => {
         arr.push(value);
     });
-    arr.sort((a,b)=>a.x-b.x)
+    // arr.sort((a,b)=>a.x-b.x)
     return upperBridge(arr, a);
 
 }
@@ -208,7 +208,7 @@ function upperBridge(T: Point[], a: Point): Point[]{
 function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
     if(pu_max.x==pu_min.x && pu_max.y==pu_min.y) return [pu_min]
     var a = getMedian([...T])
-    T.sort((a,b)=> a.x-b.x)
+    // T.sort((a,b)=> a.x-b.x)
     console.log("a", a);
     var T_left: Point[] = []
     var T_right: Point[] = []
@@ -236,13 +236,23 @@ function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
     }
     var T_new_left: Point[] = [];
     var T_new_right: Point[] = [];
+    var refpt = new Point(pl.x-1,pl.y)
+    var ref_dist = (refpt.y-pl.y)*(pu_min.x-pl.x) - (refpt.x-pl.x)*(pu_min.y-pl.y)
+    console.log("left ref dist ",ref_dist)
     for (let point of T_left){
-        if(point.x<pl.x){
+        var dist =  (point.y-pl.y)*(pu_min.x-pl.x) - (point.x-pl.x)*(pu_min.y-pl.y)
+        console.log("left dist ",dist)
+        if(dist*ref_dist>0){
             T_new_left.push(point);
         }
     }
+    var refpt = new Point(pr.x+1,pr.y)
+    var ref_dist = (refpt.y-pr.y)*(pu_max.x-pr.x) - (refpt.x-pr.x)*(pu_max.y-pr.y)
+    console.log("right ref dist ",ref_dist)
     for (let point of T_right){
-        if(point.x>pr.x){
+        var dist = (point.y-pr.y)*(pu_max.x-pr.x) - (point.x-pr.x)*(pu_max.y-pr.y)
+        console.log("right dist ",dist)
+        if(dist*ref_dist>0){
             T_new_right.push(point);
         }
     }
@@ -260,7 +270,7 @@ function UpperHull(pu_min: Point, pu_max: Point, T: Point[]): Point[]{
 
 function KPS(points: Point[]): [Point, Point][] {
     console.log(points);
-    points.sort((a, b) => a.x-b.x)
+    // points.sort((a, b) => a.x-b.x)
     let pu_min = new Point(Number.MAX_VALUE, Number.MIN_SAFE_INTEGER);
     let pu_max = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
     let pl_min = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
