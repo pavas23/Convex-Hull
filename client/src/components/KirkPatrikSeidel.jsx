@@ -181,6 +181,8 @@ console.log('pairs = ',pairs)
   console.log('slopes = ',slopes)
   if(slopes.length==0) return upperBridge(candidates,a)
 
+
+  //replace with MOM
   slopes.sort((a,b)=>a-b)
   var median_slope=0
   if(slopes.length%2==0){
@@ -228,13 +230,7 @@ console.log('pairs = ',pairs)
   var pm = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
   for(var p of max_set){
     if(p.x < pk.x) pk = p
-    // else if(p.x===pk.x && p.y < pk.y){
-    //     pk = p
-    // }
     if(p.x > pm.x) pm = p
-    // else if(p.x === pm.x && p.y > pm.y){
-    //   pm = p
-    // }
   }
 
   console.log('pk = ',pk,'pm= ',pm)
@@ -276,6 +272,7 @@ console.log('pairs = ',pairs)
 }
 function  upperHull(pumin,pumax,T){
   if(Point.equals(pumin,pumax)) return [pumin]
+  //replace with MOM
   var a= medianTemp(T)
   console.log('a = ',a)
   var bridge = upperBridge(T,a)
@@ -295,22 +292,22 @@ function  upperHull(pumin,pumax,T){
 
   var T_left = [pl,pumin]
   var T_right = [pr,pumax]
-  var ref_pt = new Point(Math.floor((pl.x+pumin.x)/2),Math.max(pl.y,pumin.y)+2)
-  var ref_dist = (ref_pt.x - pumin.x)*(pl.y-pumin.y) - (ref_pt.y - pumin.y)*(pl.x-pumin.x)
+  var ref_pt = new Point(Math.floor((pl.x+pumin.x)/2),Math.max(pl.y,pumin.y)+1)
+  var ref_dist = (ref_pt.y-pl.y)*(pumin.x-pl.x)-(ref_pt.x-pl.x)*(pumin.y-pl.y)
   console.log('left ref pt = ',ref_pt,'left ref dist = ',ref_dist)
   for(var p of T){
-    var dist = (p.x - pumin.x)*(pl.y-pumin.y) - (p.y - pumin.y)*(pl.x-pumin.x)
+    var dist =(p.y-pl.y)*(pumin.x-pl.x)-(p.x-pl.x)*(pumin.y-pl.y)
     console.log('left pt = ',p,'left dist = ',dist)
     if(dist*ref_dist>0){
       T_left.push(p)
     }
   }
 
-  ref_pt = new Point(Math.floor((pr.x+pumax.x)/2),Math.max(pr.y,pumax.y)+2)
-  ref_dist = (ref_pt.x - pumax.x)*(pr.y-pumax.y) - (ref_pt.y - pumax.y)*(pr.x-pumax.x)
+  ref_pt = new Point(Math.floor((pr.x+pumax.x)/2),Math.max(pr.y,pumax.y)+1)
+  ref_dist = (ref_pt.y-pr.y)*(pumax.x-pr.x)-(ref_pt.x-pr.x)*(pumax.y-pr.y)
   console.log('right ref pt = ',ref_pt,'right ref dist = ',ref_dist)
   for(var p of T){
-    var dist =  (p.x - pumax.x)*(pr.y-pumax.y) - (p.y - pumax.y)*(pr.x-pumax.x)
+    var dist =  (p.y-pr.y)*(pumax.x-pr.x)-(p.x-pr.x)*(pumax.y-pr.y)
     console.log('right pt = ',p,'right dist = ',dist)
     if(dist*ref_dist > 0){
       T_right.push(p)
