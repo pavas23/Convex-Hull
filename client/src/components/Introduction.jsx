@@ -179,7 +179,7 @@ function Introduction() {
                     // alignContent: "center",
                   }}
                 >
-                  Intersection of Half-Spaces:
+                  Intersection of Half-Spaces
                 </span>
                 <span
                   style={{ paddingLeft: "10px", borderLeft: "1px solid black" }}
@@ -208,7 +208,7 @@ function Introduction() {
                     flex: "0 0 15%",
                   }}
                 >
-                  Convex Combinations:
+                  Convex Combinations
                 </span>
                 <span
                   style={{ paddingLeft: "10px", borderLeft: "1px solid black" }}
