@@ -91,9 +91,9 @@ canvas {
 
 .title {
   font-family: "Goudy Bookletter 1911", sans-serif;
-  font-size: 25px;
-  font-weight: 500;
-  color: #553c9a;
+  font-size: 30px;
+  font-weight: 700;
+  color: #000000;
   margin-bottom: 0.5%;
   margin-top: 0.8%;
   z-index: 1;
