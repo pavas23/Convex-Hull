@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
-// import {KPS} from "../algorithms/KirkPatrickSeidel.ts";
 
 class Point {
   constructor(x, y) {
@@ -8,29 +7,31 @@ class Point {
     this.y = y;
   }
 
-  static equals(p,q){
-    return (p.x===q.x && p.y===q.y)
+  static equals(p, q) {
+    return p.x === q.x && p.y === q.y;
   }
 }
 
 class Pair {
   constructor(pi, pj) {
-      this.pi = pi;
-      this.pj = pj;
+    this.pi = pi;
+    this.pj = pj;
   }
 }
 
 function KirkPatrikSeidel() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [height,setHeight] = useState(0);
-  const [scaleYState,setScaleYState] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [scaleYState, setScaleYState] = useState(0);
+  // const [upperBridges,setUpperBridges] = useState([]);
+  var upperBridges = [];
 
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
     // Get mouse position relative to canvas
     const rect = event.target.getBoundingClientRect();
-    var scaleX = event.target.width / rect.width; // relationship bitmap vs. element for x
+    var scaleX = event.target.width / rect.width;
     var scaleY = event.target.height / rect.height;
     const x = (event.clientX - rect.left) * scaleX;
     const y = (rect.height - (event.clientY - rect.top)) * scaleY;
@@ -39,25 +40,36 @@ function KirkPatrikSeidel() {
 
     ctx.fillStyle = "black";
     ctx.beginPath();
-    ctx.arc(x, rect.height*scaleY - y, 3, 0, Math.PI * 2);
+    ctx.arc(x, rect.height * scaleY - y, 3, 0, Math.PI * 2);
     ctx.fill();
 
     // Add point to array
-    console.log( new Point(x, y));
+    // console.log(new Point(x, y));
     var newPoints = [...points, new Point(x, y)];
     setPoints(newPoints);
   };
-
 
   // Function to draw the points on the canvas
   const drawPoints = (ctx) => {
     ctx.fillStyle = "black";
     for (let point of points) {
       ctx.beginPath();
-      ctx.arc(point.x, height*scaleYState-point.y, 3, 0, Math.PI * 2);
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
   };
+
+  const drawUpperBridges = (ctx) => {
+    for (let edge of upperBridges) {
+      ctx.strokeStyle = "purple";
+      ctx.lineWidth = 1;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(edge[0].x, height * scaleYState - edge[0].y);
+      ctx.lineTo(edge[1].x, height * scaleYState - edge[1].y);
+      ctx.stroke();
+    }
+  }
 
   // Function to draw the edges on the canvas
   const drawEdges = (ctx) => {
@@ -66,8 +78,8 @@ function KirkPatrikSeidel() {
       ctx.lineWidth = 1;
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(edge[0].x,height*scaleYState - edge[0].y);
-      ctx.lineTo(edge[1].x,height*scaleYState - edge[1].y);
+      ctx.moveTo(edge[0].x, height * scaleYState - edge[0].y);
+      ctx.lineTo(edge[1].x, height * scaleYState - edge[1].y);
       ctx.stroke();
     }
   };
@@ -76,13 +88,10 @@ function KirkPatrikSeidel() {
   const drawCanvas = () => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     // Draw points
     drawPoints(ctx);
-
     // Draw edges
     drawEdges(ctx);
   };
@@ -96,301 +105,445 @@ function KirkPatrikSeidel() {
     setEdges([]);
   };
 
-  // Function to run KPS algorithm and update edges
-//   var temp = [202.6666667	,187.2083333]
-// [296,	124.5416667]
-// [205.3333333,	183.2083333]
-// [208.8888889	,173.875]
-// [213.3333333,	171.2083333]
-// [230.2222222,	155.2083333]
-// [234.6666667,	152.5416667]
-// [243.5555556,	151.2083333]
-// [248.8888889	,151.2083333]
-// [263.1111111,	141.875]
-// [264,	132.5416667]
-// [264.8888889	,131.2083333]
-// [270.2222222,	131.2083333]
-// [293.3333333,	105.875]
-// [313.7777778,	113.875]
-// [322.6666667,	108.5416667]
-// [328.8888889,	117.875]
-// [340.4444444,	123.2083333]
-// [360	,136.5416667]
-// [360,144.5416667]
-// [357.3333333,	219.2083333]
-// [335.1111111	,219.2083333]
-// [331.5555556,	220.5416667]
-// [308.4444444	,237.875]
-// [307.5555556	,239.2083333]
-// [298.6666667	,239.2083333]
-// [275.5555556	,239.2083333]
-// [270.2222222	,239.2083333]
-// [257.7777778,	239.2083333]
-// [257.7777778	,239.2083333]
-// [241.7777778,	239.2083333]
-// [218.6666667	,237.875]
-// [218.6666667,	232.5416667]
-// [216	,221.875]
-// [208.8888889	,197.875]
-  const generateConvexHull = () => {
-    // points.sort((a, b) => a.x-b.x)
-    console.log(points)
-    const newEdges = KirkPatrickSeidel(points);
+  async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  const generateConvexHull = async () => {
+    const newEdges = await KirkPatrickSeidel(points);
     setEdges(newEdges);
-    drawCanvas();
   };
 
-function medianTemp(T){
-  var T_cpy = [...T]
-  T_cpy.sort((a,b)=>a.x-b.x)
-  return T_cpy[Math.floor(T_cpy.length/2)]
-}
-function upperBridge(T,a){
-  var candidates = []
-  if(T.length == 1) return T
-  if(T.length==2){
-    T.sort((a,b)=>a.x-b.x)
-    return T
-  }
-  var pairs = []
-
-  if(T.length%2==0){
-    for(let i = 0;i < T.length-1;i+=2){
-      var edge = [T[i],T[i+1]]
-      edge.sort((a,b)=>a.x-b.x)
-      pairs.push(new Pair(edge[0],edge[1]))
-    }
-  }else{
-    candidates.push(T[0])
-    for(let i = 1;i < T.length-1;i+=2){
-      var edge = [T[i],T[i+1]]
-      edge.sort((a,b)=>a.x-b.x)
-      pairs.push(new Pair(edge[0],edge[1]))
-    }
-  }
-console.log('pairs = ',pairs)
-  var slopes = []
-  for(var p of pairs){
-    if(p.pi.x===p.pj.x){
-      if(p.pi.y > p.pj.y) candidates.push(p.pi)
-      else candidates.push(p.pj)
-    }else{
-      slopes.push((p.pi.y-p.pj.y)/(p.pi.x-p.pj.x))
-    }
-  }
-  console.log('slopes = ',slopes)
-  if(slopes.length==0) return upperBridge(candidates,a)
-
-
-  //replace with MOM
-  slopes.sort((a,b)=>a-b)
-  var median_slope=0
-  if(slopes.length%2==0){
-    median_slope = (slopes[slopes.length/2]+slopes[(slopes.length/2)-1])/2
-  }else{
-    median_slope = slopes[Math.floor(slopes.length/2)]
-  }
-  console.log('median_slope = ',median_slope)
-  var small = []
-  var equal = []
-  var large = []
-
-  for(var p of pairs)
-  {
-    if(p.pi.x===p.pj.x) continue
-      var s = (p.pi.y-p.pj.y)/(p.pi.x-p.pj.x)
-      if(s<median_slope) small.push(p)
-      else if(s===median_slope) equal.push(p)
-      else large.push(p)
-  }
-  console.log('small = ',small)
-  console.log('large = ',large)
-  console.log('equal = ',equal)
-  var max_intercept = Number.MIN_SAFE_INTEGER
-  for(var p of T){
-    var intercept = p.y-median_slope*p.x
-    if(intercept>max_intercept)
-    {
-      max_intercept = intercept
-    }
-  }
-  console.log('max_intercept = ',max_intercept)
-  var EPSILON = 1e-9
-  var max_set = []
-  for(var p of T){
-    var intercept = p.y-median_slope*p.x
-    console.log('intercept = ',intercept)
-    if((max_intercept-intercept)<=EPSILON){
-      max_set.push(p)
-    }
+  async function medianTemp(T) {
+    var T_cpy = [...T];
+    T_cpy.sort((a, b) => a.x - b.x);
+    return T_cpy[Math.floor(T_cpy.length / 2)];
   }
 
-  console.log('max_set = ',max_set)
-  var pk= new Point(Number.MAX_SAFE_INTEGER,Number.MAX_SAFE_INTEGER)
-  var pm = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
-  for(var p of max_set){
-    if(p.x < pk.x) pk = p
-    if(p.x > pm.x) pm = p
-  }
+  async function upperBridge(T, a) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-  console.log('pk = ',pk,'pm= ',pm)
+    var candidates = [];
 
-  if(pk.x <= a.x && pm.x > a.x) return [pk,pm]
-  else if(pm.x <= a.x){
-    for(var p of small){
-      candidates.push(p.pi)
-      candidates.push(p.pj)
+    // base case when less than 3 points are there
+    if (T.length == 1) return T;
+    if (T.length == 2) {
+      T.sort((a, b) => a.x - b.x);
+      return T;
     }
 
-    for(var p of equal){
-      candidates.push(p.pj)
+    var pairs = [];
+    if (T.length % 2 == 0) {
+      for (let i = 0; i < T.length - 1; i += 2) {
+        var edge = [T[i], T[i + 1]];
+        edge.sort((a, b) => a.x - b.x);
+        pairs.push(new Pair(edge[0], edge[1]));
+      }
+    } else {
+      candidates.push(T[0]);
+      for (let i = 1; i < T.length - 1; i += 2) {
+        var edge = [T[i], T[i + 1]];
+        edge.sort((a, b) => a.x - b.x);
+        pairs.push(new Pair(edge[0], edge[1]));
+      }
     }
 
-    for(var p of large){
-      candidates.push(p.pj)
+    // console.log("pairs = ", pairs);
+    var slopes = [];
+    for (var p of pairs) {
+      if (p.pi.x === p.pj.x) {
+        if (p.pi.y > p.pj.y) candidates.push(p.pi);
+        else candidates.push(p.pj);
+      } else {
+        slopes.push((p.pi.y - p.pj.y) / (p.pi.x - p.pj.x));
+        ctx.strokeStyle = "pink";
+        ctx.lineWidth = 1;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(p.pi.x, height * scaleYState - p.pi.y);
+        ctx.lineTo(p.pj.x, height * scaleYState - p.pj.y);
+        ctx.stroke();
+      }
     }
+    await sleep(3000);
+
+    // clear these lines
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // drawPoints(ctx);
+    // only draw points which are passed to upper bridge
+    ctx.fillStyle = "black";
+    for (let point of T) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    drawUpperBridges(ctx);
+
+    // console.log("slopes = ", slopes);
+    if (slopes.length == 0) return upperBridge(candidates, a);
+
+    //replace with MOM
+    slopes.sort((a, b) => a - b);
+    var median_slope = 0;
+    if (slopes.length % 2 == 0) {
+      median_slope =
+        (slopes[slopes.length / 2] + slopes[slopes.length / 2 - 1]) / 2;
+    } else {
+      median_slope = slopes[Math.floor(slopes.length / 2)];
+    }
+
+    // now plotting the line with median slope
+    for(var point of T){
+      ctx.strokeStyle = "brown";
+      ctx.lineWidth = 1;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(point.x, height * scaleYState - point.y);
+      ctx.lineTo(0, height * scaleYState - (point.y-point.x*median_slope));
+      ctx.stroke();
+    }
+    await sleep(3000);
+
+    // clear these lines
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let point of T) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    drawUpperBridges(ctx);
+
+    // dividing the pairs into 3 sets
+    var small = [];
+    var equal = [];
+    var large = [];
+
+    for (var p of pairs) {
+      if (p.pi.x === p.pj.x) continue;
+      var s = (p.pi.y - p.pj.y) / (p.pi.x - p.pj.x);
+      if (s < median_slope) small.push(p);
+      else if (s === median_slope) equal.push(p);
+      else large.push(p);
+    }
+
+    var max_intercept = Number.MIN_SAFE_INTEGER;
+    for (var p of T) {
+      var intercept = p.y - median_slope * p.x;
+      if (intercept > max_intercept) {
+        max_intercept = intercept;
+      }
+    }
+
+    var EPSILON = 1e-9;
+    var max_set = [];
+    for (var p of T) {
+      var intercept = p.y - median_slope * p.x;
+      if (max_intercept - intercept <= EPSILON) {
+        max_set.push(p);
+      }
+    }
+
+    var pk = new Point(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+    var pm = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+    for (var p of max_set) {
+      if (p.x < pk.x) pk = p;
+      if (p.x > pm.x) pm = p;
+    }
+
+    if (pk.x <= a.x && pm.x > a.x) return [pk, pm];
+    else if (pm.x <= a.x) {
+      for (var p of small) {
+        candidates.push(p.pi);
+        candidates.push(p.pj);
+      }
+
+      for (var p of equal) {
+        candidates.push(p.pj);
+      }
+
+      for (var p of large) {
+        candidates.push(p.pj);
+      }
+    } else if (pk.x > a.x) {
+      for (var p of small) {
+        candidates.push(p.pi);
+      }
+
+      for (var p of equal) {
+        candidates.push(p.pi);
+      }
+
+      for (var p of large) {
+        candidates.push(p.pi);
+        candidates.push(p.pj);
+      }
+    }
+    // console.log("candidates = ", candidates);
+    return upperBridge(candidates, a);
   }
-  else if(pk.x > a.x){
-    for(var p of small){
-      candidates.push(p.pi)
-     
+
+  async function upperHull(pumin, pumax, T) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    
+    // only draw points which are passed to upperHull
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let point of T) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    drawUpperBridges(ctx);
+
+    if (Point.equals(pumin, pumax)) return [pumin];
+
+    //replace with MOM
+    var a = await medianTemp(T);
+    console.log("a = ", a);
+
+    // plotting median line
+    ctx.strokeStyle = "green";
+    ctx.lineWidth = 1;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(a.x, height * scaleYState - a.y);
+    ctx.lineTo(a.x, height * scaleYState);
+    ctx.moveTo(a.x, height * scaleYState - a.y);
+    ctx.lineTo(a.x, 0);
+    ctx.stroke();
+    await sleep(3000);
+
+    // now remove this median line from viz
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPoints(ctx);
+    drawUpperBridges(ctx);
+
+    var T_left_viz = [];
+    var T_right_viz = [];
+
+    // dividing points into left and right half
+    for(var point of points){
+      if(point.x <= a.x) T_left_viz.push(point);
+      else T_right_viz.push(point);
     }
 
-    for(var p of equal){
-      candidates.push(p.pi)
+    // plotting T_left and T_right wrt median line
+    ctx.fillStyle = "green";
+    for (let point of T_left_viz) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = "red";
+    for (let point of T_right_viz) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    await sleep(2000);
+
+    // finding upper bridge
+    var bridge = await upperBridge(T, a);
+    upperBridges.push(bridge);
+    drawPoints(ctx);
+
+    if (bridge.length == 1) return [pumin, pumax]; //unecessary but there for security
+    var pl = bridge[0];
+    var pr = bridge[1];
+    if (pl.x > pr.x) {
+      var temp = pl;
+      pl = pr;
+      pr = temp;
+    } else if (pl.x === pr.x && pl.y > pr.y) {
+      var temp = pl;
+      pl = pr;
+      pr = temp;
     }
 
-    for(var p of large){
-      candidates.push(p.pi)
-      candidates.push(p.pj)
+    // plotting upper bridge line returned by upper bridge function
+    ctx.strokeStyle = "purple";
+    ctx.lineWidth = 1;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(pl.x, height * scaleYState - pl.y);
+    ctx.lineTo(pr.x, height * scaleYState - pr.y);
+    ctx.stroke();
+    await sleep(3000);
+
+    var T_left = [pl, pumin];
+    var T_right = [pr, pumax];
+
+    var ref_pt = new Point(
+      Math.floor((pl.x + pumin.x) / 2),
+      Math.max(pl.y, pumin.y) + 1
+    );
+
+    var ref_dist =
+      (ref_pt.y - pl.y) * (pumin.x - pl.x) -
+      (ref_pt.x - pl.x) * (pumin.y - pl.y);
+    for (var p of T) {
+      var dist =
+        (p.y - pl.y) * (pumin.x - pl.x) - (p.x - pl.x) * (pumin.y - pl.y);
+      if (dist * ref_dist > 0) {
+        T_left.push(p);
+      }
     }
-  }
-  console.log('candidates = ',candidates)
-  return upperBridge(candidates,a)
 
+    ref_pt = new Point(
+      Math.floor((pr.x + pumax.x) / 2),
+      Math.max(pr.y, pumax.y) + 1
+    );
 
-}
-function  upperHull(pumin,pumax,T){
-  if(Point.equals(pumin,pumax)) return [pumin]
-  //replace with MOM
-  var a= medianTemp(T)
-  console.log('a = ',a)
-  var bridge = upperBridge(T,a)
-  console.log('bridge = ',bridge)
-  if(bridge.length==1) return [pumin,pumax] //unecessary but there for security
-  var pl = bridge[0]
-  var pr = bridge[1]
-  if(pl.x>pr.x){
-    var temp = pl
-    pl = pr
-    pr = temp
-  }else if(pl.x===pr.x && pl.y>pr.y){
-    var temp = pl
-    pl = pr
-    pr = temp
-  }
+    ref_dist =
+      (ref_pt.y - pr.y) * (pumax.x - pr.x) -
+      (ref_pt.x - pr.x) * (pumax.y - pr.y);
 
-  var T_left = [pl,pumin]
-  var T_right = [pr,pumax]
-  var ref_pt = new Point(Math.floor((pl.x+pumin.x)/2),Math.max(pl.y,pumin.y)+1)
-  var ref_dist = (ref_pt.y-pl.y)*(pumin.x-pl.x)-(ref_pt.x-pl.x)*(pumin.y-pl.y)
-  console.log('left ref pt = ',ref_pt,'left ref dist = ',ref_dist)
-  for(var p of T){
-    var dist =(p.y-pl.y)*(pumin.x-pl.x)-(p.x-pl.x)*(pumin.y-pl.y)
-    console.log('left pt = ',p,'left dist = ',dist)
-    if(dist*ref_dist>0){
-      T_left.push(p)
+    for (var p of T) {
+      var dist =
+        (p.y - pr.y) * (pumax.x - pr.x) - (p.x - pr.x) * (pumax.y - pr.y);
+      if (dist * ref_dist > 0) {
+        T_right.push(p);
+      }
     }
+
+    // plotting T_left which goes for recursion
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "orange";
+    console.log("t_left is",T_left);
+    for(var point of T_left){
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    await sleep(3000);
+    drawPoints(ctx);
+    drawUpperBridges(ctx);
+
+    var leftList = Point.equals(pumin, pl)
+      ? [pl]
+      : await upperHull(pumin, pl, T_left);
+
+    // plotting T_right which goes for recursion
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "red";
+    console.log("t_right is",T_right);
+    for(var point of T_right){
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    await sleep(3000);
+    drawPoints(ctx);
+    drawUpperBridges(ctx);
+  
+    var rightList = Point.equals(pumax, pr)
+      ? [pr]
+      : await upperHull(pr, pumax, T_right);
+
+    return [...leftList, ...rightList];
   }
 
-  ref_pt = new Point(Math.floor((pr.x+pumax.x)/2),Math.max(pr.y,pumax.y)+1)
-  ref_dist = (ref_pt.y-pr.y)*(pumax.x-pr.x)-(ref_pt.x-pr.x)*(pumax.y-pr.y)
-  console.log('right ref pt = ',ref_pt,'right ref dist = ',ref_dist)
-  for(var p of T){
-    var dist =  (p.y-pr.y)*(pumax.x-pr.x)-(p.x-pr.x)*(pumax.y-pr.y)
-    console.log('right pt = ',p,'right dist = ',dist)
-    if(dist*ref_dist > 0){
-      T_right.push(p)
-    }
-  }
-  console.log('Tleft = ',T_left)
-  var leftList = (Point.equals(pumin,pl))?[pl] : upperHull(pumin,pl,T_left)
-  console.log('Tright = ',T_right)
-  var rightList = (Point.equals(pumax,pr))?[pr] :  upperHull(pr,pumax,T_right)
-  console.log('leftlist = ',leftList,'rightlist = ',rightList)
+  async function lowerHull(points) {
+    var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+    var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
 
-  return [...leftList,...rightList]
-}
+    for (var p of points) {
+      if (p.x < pumin.x) {
+        pumin = p;
+      } else if (p.x === pumin.x && p.y > pumin.y) {
+        pumin = p;
+      }
+      if (p.x > pumax.x) {
+        pumax = p;
+      } else if (p.x === pumax.x && p.y > pumax.y) {
+        pumax = p;
+      }
+    }
 
-function lowerHull(points){
-  var pumin = new Point(Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
-  var pumax = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
-  for(var p of points){
-    if(p.x < pumin.x){
-      pumin = p
-    }else if(p.x===pumin.x && p.y > pumin.y){
-      pumin = p
+    var T = [pumin, pumax];
+    for (var p of points) {
+      if (p.x < pumax.x && p.x > pumin.x) {
+        T.push(p);
+      }
     }
-    if(p.x > pumax.x ){
-      pumax = p
-    }else if(p.x===pumax.x && p.y > pumax.y){
-      pumax = p
+
+    var UH = await upperHull(pumin, pumax, T);
+    var LH = [];
+    for (var p of UH) {
+      LH.push(new Point(p.x, -1 * p.y));
     }
+    return LH;
   }
 
-  var T = [pumin,pumax]
-  for(var p of points){
-    if(p.x < pumax.x && p.x > pumin.x){
-      T.push(p)
+  async function KirkPatrickSeidel(points) {
+    if(points.length === 0){
+      return [];
     }
-  }
-  console.log('T = ',T)
-  var UH = upperHull(pumin,pumax,T)
-  var LH = []
-  for(var p of UH){
-    LH.push(new Point(p.x,(-1)*p.y))
-  }
-  return LH
-}
-function KirkPatrickSeidel(points){
-  var pumin = new Point(Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
-  var pumax = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
-  for(var p of points){
-    if(p.x < pumin.x){
-      pumin = p
-    }else if(p.x===pumin.x && p.y > pumin.y){
-      pumin = p
-    }
-    if(p.x > pumax.x ){
-      pumax = p
-    }else if(p.x===pumax.x && p.y > pumax.y){
-      pumax = p
-    }
-  }
 
-  var T = [pumin,pumax]
-  for(var p of points){
-    if(p.x < pumax.x && p.x > pumin.x){
-      T.push(p)
+    var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+    var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+
+    for (var p of points) {
+      if (p.x < pumin.x) {
+        pumin = p;
+      } else if (p.x === pumin.x && p.y > pumin.y) {
+        pumin = p;
+      }
+      if (p.x > pumax.x) {
+        pumax = p;
+      } else if (p.x === pumax.x && p.y > pumax.y) {
+        pumax = p;
+      }
     }
-  }
-  console.log('T = ',T)
-  var UH = upperHull(pumin,pumax,T)
-  var lowerPts = []
-  for(var p of points){
-    lowerPts.push(new Point(p.x,(-1)*p.y))
-  }
-  var LH = lowerHull(lowerPts)
-  LH.reverse()
-  UH = [...UH,...LH]
-  var edges = []
-  for(let i = 0; i<UH.length-1;i++){
-    edges.push([UH[i],UH[i+1]])
-  }
 
-  return edges
-}
+    var T = [pumin, pumax];
 
+    // marking pumin and pumax for viz
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "red";
+    for (let point of T) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // sleep to viz pumin and pumax
+    await sleep(3000);
+
+    for (var p of points) {
+      if (p.x < pumax.x && p.x > pumin.x) {
+        T.push(p);
+      }
+    }
+
+    // marking points T that are passed to upper hull
+    ctx.fillStyle = "blue";
+    for (let point of T) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    await sleep(3000);
+
+    // console.log("T = ", T);
+    var UH = await upperHull(pumin, pumax, T);
+
+    var lowerPts = [];
+    for (var p of points) {
+      lowerPts.push(new Point(p.x, -1 * p.y));
+    }
+    var LH = await lowerHull(lowerPts);
+    LH.reverse();
+
+    UH = [...UH, ...LH];
+    var edges = [];
+    for (let i = 0; i < UH.length - 1; i++) {
+      edges.push([UH[i], UH[i + 1]]);
+    }
+    return edges;
+  }
 
   return (
     <div className="App">
@@ -418,46 +571,3 @@ function KirkPatrickSeidel(points){
 }
 
 export default KirkPatrikSeidel;
-
-
-/**
- * var temp = [202.6666667	,187.2083333]
-[296,	124.5416667]
-[205.3333333,	183.2083333]
-[208.8888889	,173.875]
-[213.3333333,	171.2083333]
-[230.2222222,	155.2083333]
-[234.6666667,	152.5416667]
-[243.5555556,	151.2083333]
-[248.8888889	,151.2083333]
-[263.1111111,	141.875]
-[264,	132.5416667]
-[264.8888889	,131.2083333]
-[270.2222222,	131.2083333]
-[293.3333333,	105.875]
-[313.7777778,	113.875]
-[322.6666667,	108.5416667]
-[328.8888889,	117.875]
-[340.4444444,	123.2083333]
-[360	,136.5416667]
-[360,144.5416667]
-[357.3333333,	219.2083333]
-[335.1111111	,219.2083333]
-[331.5555556,	220.5416667]
-[308.4444444	,237.875]
-[307.5555556	,239.2083333]
-[298.6666667	,239.2083333]
-[275.5555556	,239.2083333]
-[270.2222222	,239.2083333]
-[257.7777778,	239.2083333]
-[257.7777778	,239.2083333]
-[241.7777778,	239.2083333]
-[218.6666667	,237.875]
-[218.6666667,	232.5416667]
-[216	,221.875]
-[208.8888889	,197.875]
-
- * 
- * 
- * 
- */
