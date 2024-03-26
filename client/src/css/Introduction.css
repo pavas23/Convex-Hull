@@ -76,13 +76,14 @@
   transform: translateY(2px);
 }
 
-.introPara {
-  font-size: larger;
-  font-family: "Times New Roman", Times, serif;
-  padding-left: 5%;
-  padding-right: 5%;
-  flex-grow: 1;
-}
+  .introPara{
+    font-size: larger;
+    font-family: 'Times New Roman', Times, serif;
+    padding-left: 5%;
+    padding-right: 5%;
+    flex-grow: 1;
+    text-align: start;
+  }
 
 .button-container {
   flex-grow: 1;
@@ -101,4 +102,15 @@
   flex-direction: column;
   width: 10%;
   margin: 2%;
+}
+  
+#buttonRow{
+  display: flex;
+  flex-direction: row;
+  
+}
+
+#listContainer{
+  display: flex;
+  align-items: baseline;
 }
