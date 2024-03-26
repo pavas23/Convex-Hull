@@ -322,7 +322,36 @@ function  upperHull(pumin,pumax,T){
   return [...leftList,...rightList]
 }
 
+function lowerHull(points){
+  var pumin = new Point(Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
+  var pumax = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
+  for(var p of points){
+    if(p.x < pumin.x){
+      pumin = p
+    }else if(p.x===pumin.x && p.y > pumin.y){
+      pumin = p
+    }
+    if(p.x > pumax.x ){
+      pumax = p
+    }else if(p.x===pumax.x && p.y > pumax.y){
+      pumax = p
+    }
+  }
 
+  var T = [pumin,pumax]
+  for(var p of points){
+    if(p.x < pumax.x && p.x > pumin.x){
+      T.push(p)
+    }
+  }
+  console.log('T = ',T)
+  var UH = upperHull(pumin,pumax,T)
+  var LH = []
+  for(var p of UH){
+    LH.push(new Point(p.x,(-1)*p.y))
+  }
+  return LH
+}
 function KirkPatrickSeidel(points){
   var pumin = new Point(Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
   var pumax = new Point(Number.MIN_SAFE_INTEGER,Number.MIN_SAFE_INTEGER)
@@ -347,7 +376,13 @@ function KirkPatrickSeidel(points){
   }
   console.log('T = ',T)
   var UH = upperHull(pumin,pumax,T)
-  
+  var lowerPts = []
+  for(var p of points){
+    lowerPts.push(new Point(p.x,(-1)*p.y))
+  }
+  var LH = lowerHull(lowerPts)
+  LH.reverse()
+  UH = [...UH,...LH]
   var edges = []
   for(let i = 0; i<UH.length-1;i++){
     edges.push([UH[i],UH[i+1]])
