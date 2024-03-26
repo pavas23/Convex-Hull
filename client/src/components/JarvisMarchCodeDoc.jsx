@@ -19,7 +19,9 @@ function JarvisMarchCodeDocumentation() {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       />
-      <h1 className="title2" style={{fontSize:'50px'}}>Code Documentation: Jarvis March Algorithm</h1>
+      <h1 className="title2" style={{ fontSize: "50px" }}>
+        Code Documentation: Jarvis March Algorithm
+      </h1>
       <div className="carousel">
         <div className="slideBtnContainer" style={{ alignItems: "flex-start" }}>
           <div

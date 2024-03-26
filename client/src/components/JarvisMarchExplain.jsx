@@ -21,9 +21,15 @@ function JarvisMarchExplain() {
       />
       <h1 className="title2">Jarvis March Algorithm</h1>
       <div className="buttonRow">
-      <Link to = '/Jarvis-March-Visualization' class="changeBtn">Visualization</Link>
-      <Link to = '/Jarvis-March-Time' class="changeBtn">Time Complexiety Analysis</Link>
-      <Link to='/Jarvis-March-Code-Documentation' class="changeBtn">Code Documentation</Link>
+        <Link to="/Jarvis-March-Visualization" class="changeBtn">
+          Visualization
+        </Link>
+        <Link to="/Jarvis-March-Time" class="changeBtn">
+          Time Complexiety Analysis
+        </Link>
+        <Link to="/Jarvis-March-Code-Documentation" class="changeBtn">
+          Code Documentation
+        </Link>
       </div>
       <div className="carousel">
         <div className="slideBtnContainer" style={{ alignItems: "flex-start" }}>

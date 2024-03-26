@@ -17,6 +17,7 @@
   margin: 0 auto; /* Center the title */
   animation: cursor 1s infinite step-end, typing 7s infinite steps(1000);
 }
+
 @keyframes cursor {
   0%,
   100% {
@@ -26,6 +27,7 @@
     border-color: #000;
   }
 }
+
 @keyframes typing {
   0% {
     width: 0ch;
@@ -68,6 +70,7 @@
   background-color: #f0f0f0;
   text-align: center;
 }
+
 .entryBL {
   width: 51%;
   display: table-cell;
@@ -76,6 +79,7 @@
   background-color: #f0f0f0;
   text-align: center;
 }
+
 .entryBR {
   width: 51%;
   display: table-cell;
