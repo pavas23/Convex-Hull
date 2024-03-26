@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import nthSmallestPoints from "../algorithms/MedianOfMediansPoints";
 import nthSmallest from "../algorithms/MedianOfMedians";
+import KirkPatrickSeidelAlgorithm from "../algorithms/KirkPatrickSeidelAlgo"; 
 
 class Point {
   constructor(x, y) {
@@ -52,6 +53,19 @@ function KirkPatrikSeidel() {
     // }
     // setPoints(newPoints);
   };
+
+  const findSolution = () => {
+    const edges = KirkPatrickSeidelAlgorithm(points);
+    setEdges(edges);
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw points
+    drawPoints(ctx);
+    // Draw edges
+    drawEdges(ctx);
+  }
 
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
@@ -470,7 +484,7 @@ function KirkPatrikSeidel() {
 
     if (Point.equals(pumin, pumax)) return [pumin];
 
-    var a = nthSmallestPoints(T, Math.floor(T.length / 2));
+    var a = nthSmallestPoints(T, Math.ceil(T.length / 2));
 
     // plotting median line
     ctx.strokeStyle = "green";
@@ -890,6 +904,9 @@ function KirkPatrikSeidel() {
         </button>
         <button onClick={createRandomPoints} className="redrawButton">
           Random Points
+        </button>
+        <button onClick={findSolution} className="redrawButton">
+          Skip to Solution
         </button>
         <button onClick={clearCanvas} className="redrawButton">
           Clear Canvas
