@@ -1,92 +1,65 @@
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
+function nthSmallest(list, n) {
+    const index = select(list, 0, list.length - 1, n - 1);
+    return list[index];
 }
 
-function scam(arr,low,high,k){
-  arr.sort((a,b)=>a.x-b.x);
-  k = Math.ceil(k);
-  return arr[k-1+low];
+function select(list, left, right, n) {
+    while (true) {
+        if (left === right) return left;
+        const pivotIndex = pivot(list, left, right);
+        const newPivotIndex = partition(list, left, right, pivotIndex, n);
+        if (n === newPivotIndex) return n;
+        else if (n < newPivotIndex) right = newPivotIndex - 1;
+        else left = newPivotIndex + 1;
+    }
 }
 
-function kthSmallestElement(arr, low, high, k) {
-  return scam(arr,low,high,k);
-  k = Math.ceil(k);
-  if (k > 0 && k <= high - low + 1) {
-    let n = high - low + 1;
-    let i,
-      median = [];
-
-    for (i = 0; i < Math.floor(n / 5); i++) {
-      median[i] = getMedian(arr.slice(5 * i + low, 5 * i + low + 4), 5);
+function pivot(list, left, right) {
+    if (right - left < 5) return partition5(list, left, right);
+    for (let i = left; i <= right; i += 5) {
+        let subRight = i + 4;
+        if (subRight > right) subRight = right;
+        const median5 = partition5(list, i, subRight);
+        [list[median5], list[left + Math.floor((i - left) / 5)]] = [list[left + Math.floor((i - left) / 5)], list[median5]];
     }
-
-    if (n % 5 !== 0) {
-      median[i] = getMedian(
-        arr.slice(5 * i + low, 5 * i + low + (n % 5)),
-        n % 5
-      );
-      i++;
-    }
-
-    let medOfMed =
-      i === 1
-        ? median[i - 1].x
-        : kthSmallestElement(median, 0, i - 1, Math.floor(i / 2)).x;
-
-    let partition = partitionPractise(arr, low, high, medOfMed);
-
-    if (partition - low === k - 1) {
-      return arr[partition];
-    }
-    if (partition - low > k - 1) {
-      return kthSmallestElement(arr, low, partition - 1, k);
-    }
-
-    return kthSmallestElement(
-      arr,
-      partition + 1,
-      high,
-      k - (partition + 1) + low
-    );
-  }
-
-  return new Point(-1, -1);
+    const mid = Math.floor((right - left) / 10) + left + 1;
+    return select(list, left, left + Math.floor((right - left) / 5), mid);
 }
 
-function getMedian(arr, n) {
-  arr.sort((a, b) => a.x - b.x);
-  return arr[Math.floor(n / 2)];
-}
-
-function swap(arr, i, index) {
-  if (arr[i].x === arr[index].x) {
-    return;
-  }
-  let temp = arr[i];
-  arr[i] = arr[index];
-  arr[index] = temp;
-}
-
-function partitionPractise(arr, low, high, pivot) {
-  for (let i = low; i <= high; i++) {
-    if (arr[i].x === pivot) {
-      swap(arr, i, high);
-      break;
+function partition(list, left, right, pivotIndex, n) {
+    const pivotValue = list[pivotIndex];
+    [list[pivotIndex], list[right]] = [list[right], list[pivotIndex]];
+    let storeIndex = left;
+    for (let i = left; i < right; i++) {
+        if (list[i] < pivotValue) {
+            [list[storeIndex], list[i]] = [list[i], list[storeIndex]];
+            storeIndex++;
+        }
     }
-  }
-  let index = low - 1;
-  for (let i = low; i < high; i++) {
-    if (arr[i].x < pivot) {
-      index++;
-      swap(arr, i, index);
+    let storeIndexEq = storeIndex;
+    for (let i = storeIndex; i < right; i++) {
+        if (list[i] === pivotValue) {
+            [list[storeIndexEq], list[i]] = [list[i], list[storeIndexEq]];
+            storeIndexEq++;
+        }
     }
-  }
-  index++;
-  swap(arr, index, high);
-  return index;
+    [list[right], list[storeIndexEq]] = [list[storeIndexEq], list[right]];
+    if (n < storeIndex) return storeIndex;
+    if (n <= storeIndexEq) return n;
+    return storeIndexEq;
 }
 
-module.exports = kthSmallestElement;
+function partition5(list, left, right) {
+    let i = left + 1;
+    while (i <= right) {
+        let j = i;
+        while (j > left && list[j - 1] > list[j]) {
+            [list[j - 1], list[j]] = [list[j], list[j - 1]];
+            j--;
+        }
+        i++;
+    }
+    return left + Math.floor((right - left) / 2);
+}
+
+module.exports = nthSmallest;

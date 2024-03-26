@@ -21,9 +21,15 @@ function KPSExplain() {
       />
       <h1 className="title2">Kirkpatrick-Seidel Algorithm</h1>
       <div className="buttonRow">
-      <Link to= '/Kirk-Patrik-Seidel-Visualization'  class="changeBtn">Visualization</Link>
-      <Link to='/Kirk-Patrik-Seidel-Time' class="changeBtn">Time Complexiety Analysis</Link>
-      <Link to='/Kirk-Patrik-Seidel-Code-Documentation' class="changeBtn">Code Documentation</Link>
+        <Link to="/Kirk-Patrik-Seidel-Visualization" class="changeBtn">
+          Visualization
+        </Link>
+        <Link to="/Kirk-Patrik-Seidel-Time" class="changeBtn">
+          Time Complexiety Analysis
+        </Link>
+        <Link to="/Kirk-Patrik-Seidel-Code-Documentation" class="changeBtn">
+          Code Documentation
+        </Link>
       </div>
       <div className="carousel">
         <div className="slideBtnContainer" style={{ alignItems: "flex-start" }}>

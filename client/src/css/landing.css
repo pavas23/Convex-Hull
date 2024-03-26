@@ -1,135 +1,148 @@
 .page {
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center;
-  }
-  
-  .title1 {
-    font-family: "Goudy Bookletter 1911", sans-serif;
-    font-size:60px;
-    margin-bottom: 10px !important; 
-    overflow: hidden; /* Hide overflow text */
-    border-right: 5px solid black; /* Typing cursor */
-    white-space: nowrap; /* Prevent line break */
-    margin: 0 auto; /* Center the title */
-    animation: cursor 1s infinite step-end, typing 7s infinite steps(1000);
-  }
-  @keyframes cursor{
-    0%, 100%{border-color: transparent;}
-    50%{border-color: #000;}
-  }
-  @keyframes typing{
-    0%{ width: 0ch} 
-    80%{ width: 25ch;}
-    /* 80%{ width: 16ch;} */
-    /* 90%{ width: 0ch;}  */
-    100%{ width: 0ch;}  
-  }
-  
-  .entryGrid {
-    display: table;
-    width: 60%;
-  }
-  
-  .entryRow {
-    display: table-row;
-  }
-  
-  .entryL {
-    width: 51%;
-    display: table-cell;
-    padding: 5px;
-    /* border-left: 1px solid #ccc; */
-    border-bottom: 1px solid #ccc;
-    background-color: #f0f0f0;
-    text-align: center;
-  }
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center;
+}
 
-  .entryR {
-    width: 51%;
-    display: table-cell;
-    padding: 10px;
-    border-left: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  .entryBL {
-    width: 51%;
-    display: table-cell;
-    padding: 5px;
-    /* border-left: 1px solid #ccc; */
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  .entryBR {
-    width: 51%;
-    display: table-cell;
-    padding: 10px;
-    border-left: 1px solid #ccc;
-    background-color: #f0f0f0;
-    text-align: center;
-  }
+.title1 {
+  font-family: "Goudy Bookletter 1911", sans-serif;
+  font-size: 60px;
+  margin-bottom: 10px !important;
+  overflow: hidden; /* Hide overflow text */
+  border-right: 5px solid black; /* Typing cursor */
+  white-space: nowrap; /* Prevent line break */
+  margin: 0 auto; /* Center the title */
+  animation: cursor 1s infinite step-end, typing 7s infinite steps(1000);
+}
 
-  .button-31 {
-    margin-top: 2%;
-    margin-left: 10px;
-    margin-bottom: 1%;
-    align-items: center;
-    appearance: none;
-    background-color: #fcfcfd;
-    border-radius: 4px;
-    border-width: 0;
-    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-      rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-    box-sizing: border-box;
-    color: #36395a;
-    cursor: pointer;
-    display: inline-flex;
-    font-family: "JetBrains Mono", monospace;
-    height: 48px;
-    justify-content: center;
-    line-height: 1;
-    list-style: none;
-    overflow: hidden;
-    padding-left: 16px;
-    padding-right: 16px;
-    position: relative;
-    text-align: left;
-    text-decoration: none;
-    transition: box-shadow 0.15s, transform 0.15s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
-    will-change: box-shadow, transform;
-    font-size: 15px;
+@keyframes cursor {
+  0%,
+  100% {
+    border-color: transparent;
   }
-  
-  .button-31:focus {
-    box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
-      rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  50% {
+    border-color: #000;
   }
-  
-  .button-31:hover {
-    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
-      rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-    transform: translateY(-2px);
+}
+
+@keyframes typing {
+  0% {
+    width: 0ch;
   }
-  
-  .button-31:active {
-    box-shadow: #d6d6e7 0 3px 7px inset;
-    transform: translateY(2px);
+  80% {
+    width: 25ch;
   }
-  
-  .button-31:disabled,
-  .button-31[disabled] {
-    border: 1px solid #999999;
-    background-color: #cccccc;
-    color: #666666;
+  /* 80%{ width: 16ch;} */
+  /* 90%{ width: 0ch;}  */
+  100% {
+    width: 0ch;
   }
-  
-  
+}
+
+.entryGrid {
+  display: table;
+  width: 60%;
+}
+
+.entryRow {
+  display: table-row;
+}
+
+.entryL {
+  width: 51%;
+  display: table-cell;
+  padding: 5px;
+  /* border-left: 1px solid #ccc; */
+  border-bottom: 1px solid #ccc;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.entryR {
+  width: 51%;
+  display: table-cell;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.entryBL {
+  width: 51%;
+  display: table-cell;
+  padding: 5px;
+  /* border-left: 1px solid #ccc; */
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.entryBR {
+  width: 51%;
+  display: table-cell;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.button-31 {
+  margin-top: 2%;
+  margin-left: 10px;
+  margin-bottom: 1%;
+  align-items: center;
+  appearance: none;
+  background-color: #fcfcfd;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #36395a;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono", monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 15px;
+}
+
+.button-31:focus {
+  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+}
+
+.button-31:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-31:active {
+  box-shadow: #d6d6e7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+.button-31:disabled,
+.button-31[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

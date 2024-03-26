@@ -152,8 +152,15 @@ function Introduction() {
           )}
           {slideIndex === 1 && (
             <div className="introPara" style={{ fontSize: "larger" }}>
-              <div style={{width:'100%',textAlign:'center',fontWeight:'bolder',fontSize:'larger'}}>
-              Formal Definitions of Convex Hull
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontWeight: "bolder",
+                  fontSize: "larger",
+                }}
+              >
+                Formal Definitions of Convex Hull:
               </div>
               <div
                 className="listContainer"
@@ -199,8 +206,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-
-                    // alignContent: "center",
                   }}
                 >
                   Convex Combinations
@@ -217,8 +222,16 @@ function Introduction() {
                   original points together in various proportions.
                 </span>
               </div>
-              <div style={{width:'100%',textAlign:'center',fontWeight:'bold',fontSize:'larger',marginTop:'20px'}}>
-              Properties of Convex Hull
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "larger",
+                  marginTop: "20px",
+                }}
+              >
+                Properties of Convex Hull:
               </div>
               <div
                 className="listContainer"
@@ -233,8 +246,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-
-                    // alignContent: "center",
                   }}
                 >
                   Unique:
@@ -298,11 +309,19 @@ function Introduction() {
                   define the "shape" of the hull.
                 </span>
               </div>
-              <div style={{width:'100%',textAlign:'center',fontWeight:'bold',fontSize:'larger',marginTop:'20px'}}>
-              Applications of Convex Hull
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "larger",
+                  marginTop: "20px",
+                }}
+              >
+                Applications of Convex Hull:
               </div>
               <div style={{ marginTop: "20px" }}>
-              Convex hulls are a fundamental concept in computational geometry
+                Convex hulls are a fundamental concept in computational geometry
                 and have numerous applications across various fields
               </div>
               <div

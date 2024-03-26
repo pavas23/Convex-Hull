@@ -5,7 +5,7 @@ class Point {
     }
 }
 
-function nthSmallest(list, n) {
+function nthSmallestPoints(list, n) {
     const index = select(list, 0, list.length - 1, n - 1);
     return list[index];
 }
@@ -69,10 +69,4 @@ function partition5(list, left, right) {
     return left + Math.floor((right - left) / 2);
 }
 
-// const list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1, 10];
-// const n = Math.ceil(list.length/2); 
-// const nthSmallestElement = nthSmallest(list, n);
-// console.log(nthSmallestElement);
-
-
-module.exports = nthSmallest;
+module.exports = nthSmallestPoints;

@@ -75,10 +75,12 @@ canvas {
   animation: animate 15s linear infinite;
   animation-duration: calc(125s / var(--i));
 }
+
 .bubbles span:nth-child(even) {
   background-color: #ff2d75;
   box-shadow: 0 0 0 10px #ff2d7544, 0 0 50px #ff2d75, 0 0 100px #ff2d75;
 }
+
 @keyframes animate {
   0% {
     transform: translateY(100vh) scale(0);
@@ -100,9 +102,6 @@ canvas {
   white-space: nowrap;
   overflow: hidden;
 }
-
-
-
 
 /* CSS */
 .button-30 {
