@@ -20,37 +20,46 @@ class Pair {
     this.pj = pj;
   }
 }
-
+var start = { start: true };
 function KirkPatrikSeidel() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
   const [height, setHeight] = useState(0);
   const [scaleYState, setScaleYState] = useState(0);
   const [text, setText] = useState(" ");
+  const [startBtn, setStartBtn] = useState(start.start);
   var upperBridges = [];
   var lowerBridges = [];
 
+
+
   const createRandomPoints = () => {
-    // var canvas = document.getElementById("canvas")
-    // var ctx = document.getElementById("canvas").getContext("2d")
-    // var pts = 20;
-    // const rect = canvas.getBoundingClientRect();
-    // var scaleX = canvas.width / rect.width;
-    // var scaleY = canvas.height / rect.height;
-    // while(pts--) {
-    //   var pt_x = Math.random() * canvas.width;
-    //   var pt_y = Math.random() * canvas.height;
-    //   var x = (pt_x - rect.left) * scaleX;
-    //   var y = (rect.height - (pt_y - rect.top)) * scaleY;
-    //   if(x>5 && y>5){
-    //     var newPoints = [...points,new Point(x,y)];
-    //     ctx.fillStyle = "blue";
-    //     ctx.beginPath();
-    //     ctx.arc(x, rect.height * scaleY - y, 5, 0, Math.PI * 2);
-    //     ctx.fill();
-    //   }
-    // }
-    // setPoints(newPoints);
+    var canvas = document.getElementById("canvas");
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var pts = 10;
+    var ptsArr = [];
+    const rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width; // relationship bitmap vs. element for x
+    var scaleY = canvas.height / rect.height;
+    console.log(scaleX, scaleY);
+    setHeight(rect.height);
+    setScaleYState(scaleY);
+    while (pts--) {
+      var pt_x = Math.random() * (rect.right - rect.left + 1) + rect.left;
+      var pt_y = Math.random() * (rect.bottom - rect.top + 1) + rect.top;
+
+      var x = (pt_x - rect.left) * scaleX;
+      var y = (rect.height-(pt_y - rect.top) )* scaleY;
+      ptsArr = [...ptsArr, { x: x, y: y }];
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(x, rect.height*scaleY - y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    console.log(ptsArr);
+    ptsArr = [...points, ...ptsArr];
+    setPoints(ptsArr);  
+    return ptsArr;
   };
 
   // Function to handle mouse click event
@@ -66,7 +75,7 @@ function KirkPatrikSeidel() {
 
     ctx.fillStyle = "blue";
     ctx.beginPath();
-    ctx.arc(x, rect.height * scaleY - y, 5, 0, Math.PI * 2);
+    ctx.arc(x, rect.height * scaleY - y, 3, 0, Math.PI * 2);
     ctx.fill();
 
     // Add point to array
@@ -80,7 +89,7 @@ function KirkPatrikSeidel() {
     ctx.fillStyle = "blue";
     for (let point of points) {
       ctx.beginPath();
-      ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
   };
@@ -147,12 +156,21 @@ function KirkPatrikSeidel() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+
+const stopExec = async (obj) => {
+    while (!obj.start) {
+      await sleep(1000);
+    }
+  };
+
   const generateConvexHull = async () => {
-    const newEdges = await KirkPatrickSeidel(points);
+    start.start = true;
+    setStartBtn(true);
+    const newEdges = await KirkPatrickSeidel(points,start);
     setEdges(newEdges);
   };
 
-  async function upperBridge(T, a, flag) {
+  async function upperBridge(T, a, flag,stopObj) {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -161,22 +179,26 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
       setText("Lower bridge is called");
       await sleep(3000);
+      await stopExec(stopObj)
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
       setText("Upper bridge is called");
       await sleep(3000);
+      await stopExec(stopObj)
     }
 
     var candidates = [];
@@ -230,9 +252,11 @@ function KirkPatrikSeidel() {
           ctx.stroke();
         }
       }
+      await stopExec(stopObj)
     }
     setText("Plotting lines formed by random pairing of points");
     await sleep(3000);
+    await stopExec(stopObj)
 
     // clear these lines
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -241,16 +265,18 @@ function KirkPatrikSeidel() {
     if (flag === 1) {
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
     } else {
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
     }
 
@@ -280,6 +306,7 @@ function KirkPatrikSeidel() {
           height * scaleYState + (point.y - point.x * median_slope)
         );
         ctx.stroke();
+        await stopExec(stopObj)
       }
     } else {
       for (var point of T) {
@@ -293,10 +320,12 @@ function KirkPatrikSeidel() {
           height * scaleYState - (point.y - point.x * median_slope)
         );
         ctx.stroke();
+        await stopExec(stopObj)
       }
     }
     setText("Plotting line through every point with slope as median slope");
     await sleep(3000);
+    await stopExec(stopObj)
 
     // clear these lines
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -304,16 +333,18 @@ function KirkPatrikSeidel() {
     if (flag === 1) {
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
     } else {
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
     }
 
@@ -366,16 +397,17 @@ function KirkPatrikSeidel() {
         if (flag === 1) {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pi.x, height * scaleYState + p.pi.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pi.x, height * scaleYState + p.pi.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of lower bridge");
         } else {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pi.x, height * scaleYState - p.pi.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pi.x, height * scaleYState - p.pi.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
+        await stopExec(stopObj)
       }
 
       for (var p of large) {
@@ -383,16 +415,17 @@ function KirkPatrikSeidel() {
         if (flag === 1) {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pi.x, height * scaleYState + p.pi.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pi.x, height * scaleYState + p.pi.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of lower bridge");
         } else {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pi.x, height * scaleYState - p.pi.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pi.x, height * scaleYState - p.pi.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
+        await stopExec(stopObj)
       }
     } else if (pk.x > a.x) {
       for (var p of small) {
@@ -400,16 +433,17 @@ function KirkPatrikSeidel() {
         if (flag === 1) {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pj.x, height * scaleYState + p.pj.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pj.x, height * scaleYState + p.pj.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of lower bridge");
         } else {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pj.x, height * scaleYState - p.pj.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pj.x, height * scaleYState - p.pj.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
+        await stopExec(stopObj)
       }
 
       for (var p of equal) {
@@ -417,16 +451,17 @@ function KirkPatrikSeidel() {
         if (flag === 1) {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pj.x, height * scaleYState + p.pj.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pj.x, height * scaleYState + p.pj.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of lower bridge");
         } else {
           ctx.fillStyle = "green";
           ctx.beginPath();
-          ctx.arc(p.pj.x, height * scaleYState - p.pj.y, 5, 0, Math.PI * 2);
+          ctx.arc(p.pj.x, height * scaleYState - p.pj.y, 3, 0, Math.PI * 2);
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
+        await stopExec(stopObj)
       }
 
       for (var p of large) {
@@ -436,10 +471,10 @@ function KirkPatrikSeidel() {
     }
     await sleep(3000);
 
-    return upperBridge(candidates, a, flag);
+    return upperBridge(candidates, a, flag,stopObj);
   }
 
-  async function upperHull(pumin, pumax, T, flag) {
+  async function upperHull(pumin, pumax, T, flag,stopObj) {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -449,18 +484,20 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText("Lower hull called");
+      await stopExec(stopObj)
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText("Upper hull called");
+      await stopExec(stopObj)
     }
     if (flag === 1) {
       drawLowerBridges(ctx);
@@ -493,6 +530,7 @@ function KirkPatrikSeidel() {
     }
     setText("Line passing through the median point");
     await sleep(3000);
+    await stopExec(stopObj)
 
     var T_left_viz = [];
     var T_right_viz = [];
@@ -508,36 +546,42 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "green";
       for (let point of T_left_viz) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
       ctx.fillStyle = "red";
       for (let point of T_right_viz) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
       setText(
         "Points which are on left and right side of the median line respectively"
       );
       await sleep(3000);
+      await stopExec(stopObj)
     } else {
       ctx.fillStyle = "green";
       for (let point of T_left_viz) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
       ctx.fillStyle = "red";
       for (let point of T_right_viz) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
       setText(
         "Points which are on left and right side of the median line respectively"
       );
       await sleep(3000);
+      await stopExec(stopObj)
     }
 
     // now remove this median line from viz
@@ -546,25 +590,29 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
     }
     if (flag === 1) {
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
     } else {
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
     }
 
     // finding upper bridge
-    var bridge = await upperBridge(T, a, flag);
+    var bridge = await upperBridge(T, a, flag,stopObj);
     if (flag === 1) {
       lowerBridges.push(bridge);
     } else {
@@ -577,20 +625,24 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
+        await stopExec(stopObj)
       }
     }
     if (flag === 1) {
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
     } else {
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
     }
 
@@ -628,6 +680,7 @@ function KirkPatrikSeidel() {
       setText("Upper Bridge line");
     }
     await sleep(3000);
+    await stopExec(stopObj)
 
     var T_left = [pl, pumin];
     var T_right = [pr, pumax];
@@ -691,27 +744,30 @@ function KirkPatrikSeidel() {
     if (pl != pumin && pr != pumax)
       setText("Lines passing through (pumin and pl) and (pumax and pr)");
     await sleep(3000);
+    await stopExec(stopObj)
 
     if (flag === 1) {
       // plotting T_left which goes for recursion
       ctx.fillStyle = "orange";
       for (var point of T_left) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText("Points on which lower hull is called recursively for left side");
       await sleep(3000);
+      await stopExec(stopObj)
     } else {
       // plotting T_left which goes for recursion
       ctx.fillStyle = "orange";
       for (var point of T_left) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText("Points on which upper hull is called recursively for left side");
       await sleep(3000);
+      await stopExec(stopObj)
     }
 
     // plotting T_right which goes for recursion
@@ -719,40 +775,42 @@ function KirkPatrikSeidel() {
       ctx.fillStyle = "red";
       for (var point of T_right) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState + point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText(
         "Points on which lower hull is called recursively for right side"
       );
       await sleep(3000);
+      await stopExec(stopObj)
       drawLowerBridges(ctx);
     } else {
       ctx.fillStyle = "red";
       for (var point of T_right) {
         ctx.beginPath();
-        ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+        ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
       setText(
         "Points on which upper hull is called recursively for right side"
       );
       await sleep(3000);
+      await stopExec(stopObj)
       drawUpperBridges(ctx);
     }
 
     var leftList = Point.equals(pumin, pl)
       ? [pl]
-      : await upperHull(pumin, pl, T_left, flag);
+      : await upperHull(pumin, pl, T_left, flag,stopObj);
 
     var rightList = Point.equals(pumax, pr)
       ? [pr]
-      : await upperHull(pr, pumax, T_right, flag);
+      : await upperHull(pr, pumax, T_right, flag,stopObj);
 
     return [...leftList, ...rightList];
   }
 
-  async function lowerHull(points, flag) {
+  async function lowerHull(points, flag,stopObj) {
     var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
     var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
 
@@ -776,7 +834,7 @@ function KirkPatrikSeidel() {
       }
     }
 
-    var UH = await upperHull(pumin, pumax, T, flag);
+    var UH = await upperHull(pumin, pumax, T, flag,stopObj);
     var LH = [];
     for (var p of UH) {
       LH.push(new Point(p.x, -1 * p.y));
@@ -784,7 +842,7 @@ function KirkPatrikSeidel() {
     return LH;
   }
 
-  async function KirkPatrickSeidel(points) {
+  async function KirkPatrickSeidel(points,stopObj) {
     if (points.length === 0) {
       setText("No points selected !!");
       return [];
@@ -814,12 +872,13 @@ function KirkPatrikSeidel() {
     ctx.fillStyle = "red";
     for (let point of T) {
       ctx.beginPath();
-      ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
     setText("Points with minimum and maximum x-coordinates respectively");
     // sleep to viz pumin and pumax
     await sleep(3000);
+    await stopExec(stopObj)
 
     for (var p of points) {
       if (p.x < pumax.x && p.x > pumin.x) {
@@ -831,13 +890,14 @@ function KirkPatrikSeidel() {
     ctx.fillStyle = "orange";
     for (let point of T) {
       ctx.beginPath();
-      ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
     setText("Points that are passed to upper hull");
     await sleep(3000);
+    await stopExec(stopObj)
 
-    var UH = await upperHull(pumin, pumax, T, 0);
+    var UH = await upperHull(pumin, pumax, T, 0,stopObj);
     drawPoints(ctx);
 
     var lowerPts = [];
@@ -849,13 +909,15 @@ function KirkPatrikSeidel() {
     ctx.fillStyle = "orange";
     for (let point of points) {
       ctx.beginPath();
-      ctx.arc(point.x, height * scaleYState - point.y, 5, 0, Math.PI * 2);
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
+      await stopExec(stopObj)
     }
     setText("Points that are passed to lower hull");
     await sleep(3000);
+    await stopExec(stopObj)
 
-    var LH = await lowerHull(lowerPts, 1);
+    var LH = await lowerHull(lowerPts, 1,stopObj);
     LH.reverse();
 
     UH = [...UH, ...LH];
@@ -865,6 +927,7 @@ function KirkPatrikSeidel() {
     }
 
     setText("Convex Hull completed !!");
+    await stopExec(stopObj)
     drawPoints(ctx);
     drawUpperBridges(ctx);
     drawLowerBridges(ctx);
@@ -873,6 +936,7 @@ function KirkPatrikSeidel() {
 
   return (
     <div className="App">
+       <h3 className="title" style={{marginBottom:'0'}}>KPS Visualization</h3>
       <canvas
         id="canvas"
         width="800"
@@ -885,14 +949,20 @@ function KirkPatrikSeidel() {
         }
       ></canvas>
       <div className="buttonDiv">
-        <button onClick={generateConvexHull} className="redrawButton">
+        <button onClick={generateConvexHull} className="button-30">
           Generate Convex Hull
         </button>
-        <button onClick={createRandomPoints} className="redrawButton">
+        <button onClick={clearCanvas} className="button-30">
+          Clear Canvas
+        </button>
+        <button onClick={createRandomPoints} className="button-30">
           Random Points
         </button>
-        <button onClick={clearCanvas} className="redrawButton">
-          Clear Canvas
+        <button onClick={()=>{
+          start.start = !start.start
+          setStartBtn(!startBtn)
+          }} className="button-30">
+         {startBtn ? 'Pause' : 'Play'} 
         </button>
       </div>
       <div>
