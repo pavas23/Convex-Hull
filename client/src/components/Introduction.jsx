@@ -153,7 +153,7 @@ function Introduction() {
           {slideIndex === 1 && (
             <div className="introPara" style={{ fontSize: "larger" }}>
               <div style={{width:'100%',textAlign:'center',fontWeight:'bolder',fontSize:'larger'}}>
-              Formal Definitions of Convex Hull:
+              Formal Definitions of Convex Hull
               </div>
               <div
                 className="listContainer"
@@ -172,7 +172,7 @@ function Introduction() {
                     // alignContent: "center",
                   }}
                 >
-                  Intersection of Half-Spaces:
+                  Intersection of Half-Spaces
                 </span>
                 <span
                   style={{ paddingLeft: "10px", borderLeft: "1px solid black" }}
@@ -203,7 +203,7 @@ function Introduction() {
                     // alignContent: "center",
                   }}
                 >
-                  Convex Combinations:
+                  Convex Combinations
                 </span>
                 <span
                   style={{ paddingLeft: "10px", borderLeft: "1px solid black" }}
@@ -218,7 +218,7 @@ function Introduction() {
                 </span>
               </div>
               <div style={{width:'100%',textAlign:'center',fontWeight:'bold',fontSize:'larger',marginTop:'20px'}}>
-              Properties of Convex Hull:
+              Properties of Convex Hull
               </div>
               <div
                 className="listContainer"
@@ -299,7 +299,7 @@ function Introduction() {
                 </span>
               </div>
               <div style={{width:'100%',textAlign:'center',fontWeight:'bold',fontSize:'larger',marginTop:'20px'}}>
-              Applications of Convex Hull:
+              Applications of Convex Hull
               </div>
               <div style={{ marginTop: "20px" }}>
               Convex hulls are a fundamental concept in computational geometry
