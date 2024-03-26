@@ -112,3 +112,22 @@
   align-items: baseline;
 }
 
+.imgContainerOuter{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.imgContainerInner{
+  flex: 1;
+  margin-right: 20px;
+}
+
+.imgContainerInner img {
+  max-width: 95%;
+  height: auto;
+}
+.textContainer {
+  flex: 1;
+}
