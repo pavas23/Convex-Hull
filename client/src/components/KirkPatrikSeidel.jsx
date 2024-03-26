@@ -37,6 +37,7 @@ function KirkPatrikSeidel() {
   const [stopV, setStopV] = useState(false);
   const [speedUp, setSpeedUp] = useState(false);
   const [slowDown, setSlowDown] = useState(false);
+  const [execTime,setExecTime] = useState(0.0);
   var upperBridges = [];
   var lowerBridges = [];
 
@@ -90,10 +91,24 @@ function KirkPatrikSeidel() {
     }
   };
 
+  const findExecutionTime = () => {
+    const start = performance.now();
+    const edges = KirkPatrickSeidelAlgorithm(points);
+    const end = performance.now();
+    const executionTime = end - start;
+    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+  }
+
   const findSolution = async () => {
     stopViz.stop = true;
     setStopV(true);
+
+    const start = performance.now();
     const edges = KirkPatrickSeidelAlgorithm(points);
+    const end = performance.now();
+    const executionTime = end - start;
+    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     await stopExec(kpsDone);
@@ -232,6 +247,7 @@ function KirkPatrikSeidel() {
     // Draw points
     drawPoints(ctx, stopViz);
     const newEdges = await KirkPatrickSeidel(points, start, kpsDone);
+    findExecutionTime();
     setDisable(false);
     setEdges(newEdges);
   };
@@ -1120,6 +1136,7 @@ function KirkPatrikSeidel() {
         }}
       >
         <h1 className="title">KPS Visualization</h1>
+        <h5>Execution Time : {execTime} ms</h5>
         <div className="custom-file-input-container">
           <input
             type="file"

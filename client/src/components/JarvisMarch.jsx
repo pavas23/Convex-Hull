@@ -14,6 +14,7 @@ function JarvisMarch() {
   const [startBtn, setStartBtn] = useState(start.start);
   const [speedUp, setSpeedUp] = useState(false);
   const [slowDown, setSlowDown] = useState(false);
+  const [execTime,setExecTime] = useState(0.0);
 
   const createRandomPoints = () => {
     var canvas = document.getElementById("canvas");
@@ -24,7 +25,6 @@ function JarvisMarch() {
     var scaleX = canvas.width / rect.width; // relationship bitmap vs. element for x
     var scaleY = canvas.height / rect.height;
     var radius = rect.height / 10;
-    console.log(scaleX, scaleY);
     while (pts--) {
       var pt_x = Math.random() * (rect.right - rect.left + 1) + rect.left;
       var pt_y = Math.random() * (rect.bottom - rect.top + 1) + rect.top;
@@ -37,7 +37,6 @@ function JarvisMarch() {
       ctx.arc(x, y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
-    console.log(ptsArr);
     ptsArr = [...points, ...ptsArr];
     setPoints(ptsArr);
     const newEdges = computeConvexHull(ptsArr);
@@ -53,7 +52,6 @@ function JarvisMarch() {
     var scaleY = event.target.height / rect.height;
     const x = (event.clientX - rect.left) * scaleX;
     const y = (event.clientY - rect.top) * scaleY;
-    console.log(scaleX, scaleY);
     ctx.fillStyle = "black";
     ctx.beginPath();
     ctx.arc(x, y, 3, 0, Math.PI * 2);
@@ -81,14 +79,29 @@ function JarvisMarch() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  const findExecutionTime = () => {
+    const start = performance.now();
+    var edges = computeConvexHull(points);
+    const end = performance.now();
+    const executionTime = end - start;
+    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+  }
+
   const showSolution = async (JmDone) => {
     var canvas = document.getElementById("canvas");
     var ctx = document.getElementById("canvas").getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const start = performance.now();
     var edges = computeConvexHull(points);
+    const end = performance.now();
+    const executionTime = end - start;
+    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+
     await stopExec(JmDone);
-    console.log("jm done", JmDone);
     drawPoints(ctx);
     var newEdges = [];
+    console.log(edges);
     for (var edge of edges) {
       if (edge.flag === 2) {
         newEdges.push(edge);
@@ -98,9 +111,7 @@ function JarvisMarch() {
   };
 
   const drawRemainingEdges = (ctx, edges) => {
-    console.log(edges);
     for (var edge of edges) {
-      console.log("weubre");
       ctx.strokeStyle = "green";
       ctx.lineWidth = 1;
       ctx.lineCap = "round";
@@ -134,7 +145,6 @@ function JarvisMarch() {
 
   const stopExec = async (obj) => {
     while (!obj.start) {
-      console.log("exec ", obj.start);
       await sleep(1000);
     }
   };
@@ -144,7 +154,6 @@ function JarvisMarch() {
       return;
     }
     // setDisable(true);
-    console.log(points);
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -215,7 +224,6 @@ function JarvisMarch() {
               pq.p2.y === qr.p1.y)
           )
         ) {
-          console.log(pq, qr);
           var common_pt;
           var other1, other2;
           if (pq.p1.x === qr.p1.x && pq.p1.y === qr.p1.y) {
@@ -236,7 +244,6 @@ function JarvisMarch() {
             other2 = qr.p2;
           }
 
-          console.log(common_pt);
           ctx.beginPath();
           var startAngle = Math.atan2(
             other1.y - common_pt.y,
@@ -309,7 +316,6 @@ function JarvisMarch() {
       }
       drawPoints(ctx);
       drawRemainingEdges(ctx, finalTillNow);
-      console.log(startObj);
     }
   };
 
@@ -333,7 +339,7 @@ function JarvisMarch() {
     await drawCanvas(start, speed, stopViz);
     setDisable(false);
     JmDone.start = true;
-    console.log("generate done");
+    findExecutionTime();
   };
 
   const showSolnUtil = (JmDone, stopViz) => {
@@ -397,7 +403,6 @@ function JarvisMarch() {
       }));
 
       for (var point of scaledPtsArr) {
-        console.log(point);
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
@@ -429,6 +434,7 @@ function JarvisMarch() {
         }}
       >
         <h1 className="title">Jarvis March Visualization</h1>
+        <h5>Execution Time : {execTime} ms</h5>
         <div className="custom-file-input-container">
           <input
             type="file"
@@ -485,7 +491,6 @@ function JarvisMarch() {
         </button>
         <button
           onClick={() => {
-            console.log("clk", start);
             start.start = !start.start;
             setStartBtn(!startBtn);
           }}

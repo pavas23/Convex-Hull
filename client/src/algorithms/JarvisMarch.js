@@ -25,7 +25,7 @@ function computeConvexHull(points) {
     // checking base case
     if (n < 2) return [];
     if (n === 2) {
-        return [new Edge(points[0], points[1], true)];
+        return [new Edge(points[0], points[1], 2)];
     }
 
     const edges = [];

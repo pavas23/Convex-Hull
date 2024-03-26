@@ -206,6 +206,10 @@ function lowerHull(points) {
 }
 
 function KirkPatrickSeidelAlgorithm(points) {
+    if(points.length === 0){
+        return [];
+    }
+    
     var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
     var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
     for (var p of points) {
