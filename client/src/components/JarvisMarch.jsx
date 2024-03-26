@@ -4,6 +4,8 @@ import computeConvexHull from "../algorithms/JarvisMarch";
 
 var start = { start: true };
 var speed = { speed: 60 };
+var stopViz = { stop: false };
+var JmDone = { start: false };
 
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
@@ -79,6 +81,22 @@ function JarvisMarch() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  const showSolution = async (JmDone) => {
+    var canvas = document.getElementById("canvas");
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var edges = computeConvexHull(points);
+    await stopExec(JmDone);
+    console.log("jm done", JmDone);
+    drawPoints(ctx);
+    var newEdges = [];
+    for (var edge of edges) {
+      if (edge.flag === 2) {
+        newEdges.push(edge);
+      }
+    }
+    drawRemainingEdges(ctx, newEdges);
+  };
+
   const drawRemainingEdges = (ctx, edges) => {
     console.log(edges);
     for (var edge of edges) {
@@ -116,12 +134,16 @@ function JarvisMarch() {
 
   const stopExec = async (obj) => {
     while (!obj.start) {
+      console.log("exec ", obj.start);
       await sleep(1000);
     }
   };
 
-  const drawCanvas = async (startObj, speedObj) => {
-    setDisable(true);
+  const drawCanvas = async (startObj, speedObj, stopViz, JmDone) => {
+    if (stopViz.stop) {
+      return;
+    }
+    // setDisable(true);
     console.log(points);
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -141,6 +163,10 @@ function JarvisMarch() {
     var finalTillNow = [];
     // Draw edges one by one with a delay
     for (let i = 0; i < edges.length; i++) {
+      if (stopViz.stop) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
       const edge = edges[i];
       var oldGreenEdge;
       var greenFlag = false;
@@ -159,6 +185,10 @@ function JarvisMarch() {
       var waypts = getWaypoints(edge, speedObj);
 
       for (let t = 1; t < waypts.length; t++) {
+        if (stopViz.stop) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          return;
+        }
         ctx.lineWidth = 1;
         ctx.lineCap = "round";
         ctx.beginPath();
@@ -273,11 +303,14 @@ function JarvisMarch() {
 
       await stopExec(startObj);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (stopViz.stop) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
       drawPoints(ctx);
       drawRemainingEdges(ctx, finalTillNow);
       console.log(startObj);
     }
-    setDisable(false);
   };
 
   const clearCanvas = () => {
@@ -288,40 +321,30 @@ function JarvisMarch() {
     setEdges([]);
   };
 
+  const generateConvex = async (JmDone, speed, start, stopViz) => {
+    speed.speed = 60;
+    start.start = true;
+    setStartBtn(true);
+    setSlowDown(false);
+    setSpeedUp(false);
+    setDisable(true);
+    stopViz.stop = false;
+    JmDone.start = false;
+    await drawCanvas(start, speed, stopViz);
+    setDisable(false);
+    JmDone.start = true;
+    console.log("generate done");
+  };
+
+  const showSolnUtil = (JmDone, stopViz) => {
+    stopViz.stop = true;
+    showSolution(JmDone);
+  };
+
   return (
     <div className="App">
       <h1 className="title">Jarvis March Visualization</h1>
-      {/* <div className="bubbles">
-        <span style={{"--i":11}}></span>
-        <span style={{"--i":12}}></span>
-        <span style={{"--i":31}}></span>
-        <span style={{"--i":26}}></span>
-        <span style={{"--i":22}}></span>
-        <span style={{"--i":17}}></span>
-        <span style={{"--i":19}}></span>
-        <span style={{"--i":20}}></span>
-        <span style={{"--i":21}}></span>
-        <span style={{"--i":26}}></span>
-        <span style={{"--i":27}}></span>
-        <span style={{"--i":23}}></span>
-        <span style={{"--i":28}}></span>
-        <span style={{"--i":15}}></span>
-        <span style={{"--i":14}}></span>
-        <span style={{"--i":17}}></span>
-        <span style={{"--i":29}}></span>
-        <span style={{"--i":18}}></span>
-        <span style={{"--i":11}}></span>
-        <span style={{"--i":12}}></span>
-        <span style={{"--i":31}}></span>
-        <span style={{"--i":26}}></span>
-        <span style={{"--i":22}}></span>
-        <span style={{"--i":17}}></span>
-        <span style={{"--i":19}}></span>
-        <span style={{"--i":20}}></span>
-        <span style={{"--i":21}}></span>
-        <span style={{"--i":20}}></span>
-        <span style={{"--i":21}}></span>
-      </div> */}
+
       <canvas
         id="canvas"
         width="800"
@@ -336,12 +359,7 @@ function JarvisMarch() {
       <div className="buttonDiv">
         <button
           onClick={() => {
-            speed.speed = 60;
-            start.start = true;
-            setStartBtn(true);
-            setSlowDown(false);
-            setSpeedUp(false);
-            drawCanvas(start, speed);
+            generateConvex(JmDone, speed, start, stopViz);
           }}
           className="button-30"
           disabled={disable}
@@ -401,6 +419,14 @@ function JarvisMarch() {
           disabled={slowDown}
         >
           Slow Down
+        </button>
+        <button
+          onClick={() => {
+            showSolnUtil(JmDone, stopViz);
+          }}
+          className="button-30"
+        >
+          Show Solution
         </button>
       </div>
     </div>

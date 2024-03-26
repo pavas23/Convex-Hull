@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import nthSmallestPoints from "../algorithms/MedianOfMediansPoints";
 import nthSmallest from "../algorithms/MedianOfMedians";
-import KirkPatrickSeidelAlgorithm from "../algorithms/KirkPatrickSeidelAlgo"; 
+import KirkPatrickSeidelAlgorithm from "../algorithms/KirkPatrickSeidelAlgo";
 
 class Point {
   constructor(x, y) {
@@ -22,6 +22,10 @@ class Pair {
   }
 }
 var start = { start: true };
+var stopViz = { stop: false };
+var speed = { speed: 1500 };
+var kpsDone = { start: false };
+
 function KirkPatrikSeidel() {
   const [points, setPoints] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -29,10 +33,12 @@ function KirkPatrikSeidel() {
   const [scaleYState, setScaleYState] = useState(0);
   const [text, setText] = useState(" ");
   const [startBtn, setStartBtn] = useState(start.start);
+  const [disable, setDisable] = useState(false);
+  const [stopV, setStopV] = useState(false);
+  const [speedUp, setSpeedUp] = useState(false);
+  const [slowDown, setSlowDown] = useState(false);
   var upperBridges = [];
   var lowerBridges = [];
-
-
 
   const createRandomPoints = () => {
     var canvas = document.getElementById("canvas");
@@ -50,31 +56,53 @@ function KirkPatrikSeidel() {
       var pt_y = Math.random() * (rect.bottom - rect.top + 1) + rect.top;
 
       var x = (pt_x - rect.left) * scaleX;
-      var y = (rect.height-(pt_y - rect.top) )* scaleY;
-      ptsArr = [...ptsArr, { x: x, y: y }];
+      var y = (rect.height - (pt_y - rect.top)) * scaleY;
+      ptsArr = [...ptsArr, new Point(x, y)];
       ctx.fillStyle = "blue";
       ctx.beginPath();
-      ctx.arc(x, rect.height*scaleY - y, 3, 0, Math.PI * 2);
+      ctx.arc(x, rect.height * scaleY - y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
     console.log(ptsArr);
     ptsArr = [...points, ...ptsArr];
-    setPoints(ptsArr);  
+    setPoints(ptsArr);
     return ptsArr;
   };
 
-  const findSolution = () => {
+  const drawEdgesSolution = (ctx, edges) => {
+    for (let edge of edges) {
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 1;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(edge[0].x, height * scaleYState - edge[0].y);
+      ctx.lineTo(edge[1].x, height * scaleYState - edge[1].y);
+      ctx.stroke();
+    }
+  };
+
+  const drawPointsSolution = (ctx) => {
+    ctx.fillStyle = "blue";
+    for (let point of points) {
+      ctx.beginPath();
+      ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
+  const findSolution = async () => {
+    stopViz.stop = true;
+    setStopV(true);
     const edges = KirkPatrickSeidelAlgorithm(points);
-    setEdges(edges);
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
+    await stopExec(kpsDone);
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw points
-    drawPoints(ctx);
-    // Draw edges
-    drawEdges(ctx);
-  }
+    drawPointsSolution(ctx);
+    drawEdgesSolution(ctx, edges);
+  };
 
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
@@ -99,7 +127,10 @@ function KirkPatrikSeidel() {
   };
 
   // Function to draw the points on the canvas
-  const drawPoints = (ctx) => {
+  const drawPoints = (ctx, stopViz) => {
+    if (stopViz.stop) {
+      return;
+    }
     ctx.fillStyle = "blue";
     for (let point of points) {
       ctx.beginPath();
@@ -108,7 +139,10 @@ function KirkPatrikSeidel() {
     }
   };
 
-  const drawUpperBridges = (ctx) => {
+  const drawUpperBridges = (ctx, stopViz) => {
+    if (stopViz.stop) {
+      return;
+    }
     for (let edge of upperBridges) {
       ctx.strokeStyle = "purple";
       ctx.lineWidth = 2;
@@ -120,7 +154,10 @@ function KirkPatrikSeidel() {
     }
   };
 
-  const drawLowerBridges = (ctx) => {
+  const drawLowerBridges = (ctx, stopViz) => {
+    if (stopViz.stop) {
+      return;
+    }
     for (let edge of lowerBridges) {
       ctx.strokeStyle = "purple";
       ctx.lineWidth = 2;
@@ -133,7 +170,12 @@ function KirkPatrikSeidel() {
   };
 
   // Function to draw the edges on the canvas
-  const drawEdges = (ctx) => {
+  const drawEdges = (ctx, stopViz) => {
+    if (stopViz.stop) {
+      return;
+    }
+    console.log("ewfew");
+    console.log(edges);
     for (let edge of edges) {
       ctx.strokeStyle = "green";
       ctx.lineWidth = 1;
@@ -152,9 +194,9 @@ function KirkPatrikSeidel() {
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw points
-    drawPoints(ctx);
+    drawPoints(ctx, stopViz);
     // Draw edges
-    drawEdges(ctx);
+    drawEdges(ctx, stopViz);
   };
 
   // Function to clear the canvas and reset points
@@ -170,21 +212,34 @@ function KirkPatrikSeidel() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-
-const stopExec = async (obj) => {
+  const stopExec = async (obj) => {
     while (!obj.start) {
       await sleep(1000);
     }
   };
 
   const generateConvexHull = async () => {
+    kpsDone.start = false;
+    stopViz.stop = false;
+    setStopV(false);
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     start.start = true;
     setStartBtn(true);
-    const newEdges = await KirkPatrickSeidel(points,start);
+    setDisable(true);
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw points
+    drawPoints(ctx, stopViz);
+    const newEdges = await KirkPatrickSeidel(points, start, kpsDone);
+    setDisable(false);
     setEdges(newEdges);
   };
 
-  async function upperBridge(T, a, flag,stopObj) {
+  async function upperBridge(T, a, flag, stopObj, stopViz, speed) {
+    if (stopViz.stop) {
+      return [];
+    }
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -196,11 +251,11 @@ const stopExec = async (obj) => {
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
       setText("Lower bridge is called");
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
@@ -208,11 +263,11 @@ const stopExec = async (obj) => {
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
       setText("Upper bridge is called");
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     }
 
     var candidates = [];
@@ -266,11 +321,11 @@ const stopExec = async (obj) => {
           ctx.stroke();
         }
       }
-      await stopExec(stopObj)
+      await stopExec(stopObj);
     }
     setText("Plotting lines formed by random pairing of points");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     // clear these lines
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -282,20 +337,21 @@ const stopExec = async (obj) => {
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
     } else {
       for (let point of T) {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
     }
 
     // console.log("slopes = ", slopes);
-    if (slopes.length == 0) return upperBridge(candidates, a, flag);
+    if (slopes.length == 0)
+      return upperBridge(candidates, a, flag, stopViz, speed);
 
     var median_slope = 0;
     if (slopes.length % 2 == 0) {
@@ -320,7 +376,7 @@ const stopExec = async (obj) => {
           height * scaleYState + (point.y - point.x * median_slope)
         );
         ctx.stroke();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     } else {
       for (var point of T) {
@@ -334,12 +390,12 @@ const stopExec = async (obj) => {
           height * scaleYState - (point.y - point.x * median_slope)
         );
         ctx.stroke();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     }
     setText("Plotting line through every point with slope as median slope");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     // clear these lines
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -350,16 +406,16 @@ const stopExec = async (obj) => {
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
     } else {
       for (let point of T) {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
     }
 
     // dividing the pairs into 3 sets
@@ -421,7 +477,7 @@ const stopExec = async (obj) => {
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
 
       for (var p of large) {
@@ -439,7 +495,7 @@ const stopExec = async (obj) => {
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     } else if (pk.x > a.x) {
       for (var p of small) {
@@ -457,7 +513,7 @@ const stopExec = async (obj) => {
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
 
       for (var p of equal) {
@@ -475,7 +531,7 @@ const stopExec = async (obj) => {
           ctx.fill();
           setText("Removing points that can not be part of upper bridge");
         }
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
 
       for (var p of large) {
@@ -483,12 +539,19 @@ const stopExec = async (obj) => {
         candidates.push(p.pj);
       }
     }
-    await sleep(3000);
+    await sleep(speed.speed);
 
-    return upperBridge(candidates, a, flag,stopObj);
+    var temp = upperBridge(candidates, a, flag, stopObj, stopViz, speed);
+    if (stopViz.stop) {
+      return [];
+    }
+    return temp;
   }
 
-  async function upperHull(pumin, pumax, T, flag,stopObj) {
+  async function upperHull(pumin, pumax, T, flag, stopObj, stopViz, speed) {
+    if (stopViz.stop) {
+      return [];
+    }
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -502,7 +565,7 @@ const stopExec = async (obj) => {
         ctx.fill();
       }
       setText("Lower hull called");
-      await stopExec(stopObj)
+      await stopExec(stopObj);
     } else {
       ctx.fillStyle = "blue";
       for (let point of T) {
@@ -511,12 +574,12 @@ const stopExec = async (obj) => {
         ctx.fill();
       }
       setText("Upper hull called");
-      await stopExec(stopObj)
+      await stopExec(stopObj);
     }
     if (flag === 1) {
-      drawLowerBridges(ctx);
+      drawLowerBridges(ctx, stopViz);
     } else {
-      drawUpperBridges(ctx);
+      drawUpperBridges(ctx, stopViz);
     }
 
     if (Point.equals(pumin, pumax)) return [pumin];
@@ -543,8 +606,8 @@ const stopExec = async (obj) => {
       ctx.stroke();
     }
     setText("Line passing through the median point");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     var T_left_viz = [];
     var T_right_viz = [];
@@ -562,40 +625,40 @@ const stopExec = async (obj) => {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
       ctx.fillStyle = "red";
       for (let point of T_right_viz) {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
       setText(
         "Points which are on left and right side of the median line respectively"
       );
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     } else {
       ctx.fillStyle = "green";
       for (let point of T_left_viz) {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
       ctx.fillStyle = "red";
       for (let point of T_right_viz) {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
       setText(
         "Points which are on left and right side of the median line respectively"
       );
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     }
 
     // now remove this median line from viz
@@ -606,7 +669,7 @@ const stopExec = async (obj) => {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     } else {
       ctx.fillStyle = "blue";
@@ -614,19 +677,22 @@ const stopExec = async (obj) => {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     }
     if (flag === 1) {
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
     } else {
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
     }
 
     // finding upper bridge
-    var bridge = await upperBridge(T, a, flag,stopObj);
+    var bridge = await upperBridge(T, a, flag, stopObj, stopViz, speed);
+    if (stopViz.stop) {
+      return [];
+    }
     if (flag === 1) {
       lowerBridges.push(bridge);
     } else {
@@ -641,7 +707,7 @@ const stopExec = async (obj) => {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState + point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     } else {
       ctx.fillStyle = "blue";
@@ -649,15 +715,15 @@ const stopExec = async (obj) => {
         ctx.beginPath();
         ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
-        await stopExec(stopObj)
+        await stopExec(stopObj);
       }
     }
     if (flag === 1) {
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
     } else {
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
     }
 
     if (bridge.length == 1) return [pumin, pumax]; //unecessary but there for security
@@ -693,8 +759,8 @@ const stopExec = async (obj) => {
     } else {
       setText("Upper Bridge line");
     }
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     var T_left = [pl, pumin];
     var T_right = [pr, pumax];
@@ -757,8 +823,8 @@ const stopExec = async (obj) => {
     }
     if (pl != pumin && pr != pumax)
       setText("Lines passing through (pumin and pl) and (pumax and pr)");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     if (flag === 1) {
       // plotting T_left which goes for recursion
@@ -769,8 +835,8 @@ const stopExec = async (obj) => {
         ctx.fill();
       }
       setText("Points on which lower hull is called recursively for left side");
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     } else {
       // plotting T_left which goes for recursion
       ctx.fillStyle = "orange";
@@ -780,8 +846,8 @@ const stopExec = async (obj) => {
         ctx.fill();
       }
       setText("Points on which upper hull is called recursively for left side");
-      await sleep(3000);
-      await stopExec(stopObj)
+      await sleep(speed.speed);
+      await stopExec(stopObj);
     }
 
     // plotting T_right which goes for recursion
@@ -795,9 +861,9 @@ const stopExec = async (obj) => {
       setText(
         "Points on which lower hull is called recursively for right side"
       );
-      await sleep(3000);
-      await stopExec(stopObj)
-      drawLowerBridges(ctx);
+      await sleep(speed.speed);
+      await stopExec(stopObj);
+      drawLowerBridges(ctx, stopViz);
     } else {
       ctx.fillStyle = "red";
       for (var point of T_right) {
@@ -808,23 +874,33 @@ const stopExec = async (obj) => {
       setText(
         "Points on which upper hull is called recursively for right side"
       );
-      await sleep(3000);
-      await stopExec(stopObj)
-      drawUpperBridges(ctx);
+      await sleep(speed.speed);
+      await stopExec(stopObj);
+      drawUpperBridges(ctx, stopViz);
     }
 
     var leftList = Point.equals(pumin, pl)
       ? [pl]
-      : await upperHull(pumin, pl, T_left, flag,stopObj);
+      : await upperHull(pumin, pl, T_left, flag, stopObj, stopViz, speed);
 
+    if (stopViz.stop) {
+      return [];
+    }
     var rightList = Point.equals(pumax, pr)
       ? [pr]
-      : await upperHull(pr, pumax, T_right, flag,stopObj);
+      : await upperHull(pr, pumax, T_right, flag, stopObj, stopViz, speed);
+
+    if (stopViz.stop) {
+      return [];
+    }
 
     return [...leftList, ...rightList];
   }
 
-  async function lowerHull(points, flag,stopObj) {
+  async function lowerHull(points, flag, stopObj, stopViz, speed) {
+    if (stopViz.stop) {
+      return [];
+    }
     var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
     var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
 
@@ -848,15 +924,22 @@ const stopExec = async (obj) => {
       }
     }
 
-    var UH = await upperHull(pumin, pumax, T, flag,stopObj);
+    var UH = await upperHull(pumin, pumax, T, flag, stopObj, stopViz, speed);
     var LH = [];
+    if (stopViz.stop) {
+      return [];
+    }
     for (var p of UH) {
       LH.push(new Point(p.x, -1 * p.y));
     }
     return LH;
   }
 
-  async function KirkPatrickSeidel(points,stopObj) {
+  async function KirkPatrickSeidel(points, stopObj, kpsDone) {
+    if (stopViz.stop) {
+      return [];
+    }
+
     if (points.length === 0) {
       setText("No points selected !!");
       return [];
@@ -891,8 +974,8 @@ const stopExec = async (obj) => {
     }
     setText("Points with minimum and maximum x-coordinates respectively");
     // sleep to viz pumin and pumax
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
     for (var p of points) {
       if (p.x < pumax.x && p.x > pumin.x) {
@@ -908,11 +991,11 @@ const stopExec = async (obj) => {
       ctx.fill();
     }
     setText("Points that are passed to upper hull");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
-    var UH = await upperHull(pumin, pumax, T, 0,stopObj);
-    drawPoints(ctx);
+    var UH = await upperHull(pumin, pumax, T, 0, stopObj, stopViz, speed);
+    drawPoints(ctx, stopViz);
 
     var lowerPts = [];
     for (var p of points) {
@@ -925,13 +1008,13 @@ const stopExec = async (obj) => {
       ctx.beginPath();
       ctx.arc(point.x, height * scaleYState - point.y, 3, 0, Math.PI * 2);
       ctx.fill();
-      await stopExec(stopObj)
+      await stopExec(stopObj);
     }
     setText("Points that are passed to lower hull");
-    await sleep(3000);
-    await stopExec(stopObj)
+    await sleep(speed.speed);
+    await stopExec(stopObj);
 
-    var LH = await lowerHull(lowerPts, 1,stopObj);
+    var LH = await lowerHull(lowerPts, 1, stopObj, stopViz, speed);
     LH.reverse();
 
     UH = [...UH, ...LH];
@@ -941,16 +1024,19 @@ const stopExec = async (obj) => {
     }
 
     setText("Convex Hull completed !!");
-    await stopExec(stopObj)
-    drawPoints(ctx);
-    drawUpperBridges(ctx);
-    drawLowerBridges(ctx);
+    await stopExec(stopObj);
+    drawPoints(ctx, stopViz);
+    drawUpperBridges(ctx, stopViz);
+    drawLowerBridges(ctx, stopViz);
+    kpsDone.start = true;
     return edges;
   }
 
   return (
     <div className="App">
-       <h3 className="title" style={{marginBottom:'0'}}>KPS Visualization</h3>
+      <h3 className="title" style={{ marginBottom: "0" }}>
+        KPS Visualization
+      </h3>
       <canvas
         id="canvas"
         width="800"
@@ -963,27 +1049,77 @@ const stopExec = async (obj) => {
         }
       ></canvas>
       <div className="buttonDiv">
-        <button onClick={generateConvexHull} className="button-30">
+        <button
+          onClick={generateConvexHull}
+          className="button-30"
+          disabled={disable}
+        >
           Generate Convex Hull
         </button>
-        <button onClick={clearCanvas} className="button-30">
+        <button onClick={clearCanvas} className="button-30" disabled={disable}>
           Clear Canvas
         </button>
-        <button onClick={createRandomPoints} className="button-30">
+        <button
+          onClick={createRandomPoints}
+          className="button-30"
+          disabled={disable}
+        >
           Random Points
         </button>
         <button onClick={findSolution} className="button-30">
-          Skip to Solution
+          Show Solution
         </button>
-        <button onClick={()=>{
-          start.start = !start.start
-          setStartBtn(!startBtn)
-        }} className="button-30">
-          {startBtn ? 'Pause' : 'Play'}
+        <button
+          onClick={() => {
+            if (speed.speed > 1500) {
+              setSlowDown(false);
+              speed.speed = 1500;
+            } else if (speed.speed > 500) {
+              speed.speed = 500;
+              setSpeedUp(true);
+            }
+          }}
+          className="button-30"
+          disabled={speedUp}
+        >
+          Speed Up
+        </button>
+        <button
+          onClick={() => {
+            if (speed.speed < 1500) {
+              setSpeedUp(false);
+              speed.speed = 1500;
+            } else if (speed.speed < 3000) {
+              setSlowDown(true);
+              speed.speed = 3000;
+            }
+          }}
+          className="button-30"
+          disabled={slowDown}
+        >
+          Slow Down
+        </button>
+        <button
+          onClick={() => {
+            start.start = !start.start;
+            setStartBtn(!startBtn);
+          }}
+          className="button-30"
+          disabled={stopV}
+        >
+          {startBtn ? "Pause" : "Play"}
         </button>
       </div>
       <div>
-        <p>{text}</p>
+        <p
+          style={{
+            fontFamily: "Times New Roman",
+            fontWeight: "bold",
+            fontSize: "22px",
+          }}
+        >
+          {text}
+        </p>
       </div>
     </div>
   );
