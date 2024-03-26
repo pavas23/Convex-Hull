@@ -10,9 +10,6 @@ function JarvisMarch() {
   const [startBtn,setStartBtn] = useState(start.start)
   const [speedUp,setSpeedUp] = useState(false)
   const [slowDown,setSlowDown] = useState(false)
-  function getStart() {
-    return start
-  }
   // Function to handle mouse click event
 
   const createRandomPoints = ()=>{

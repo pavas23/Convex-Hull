@@ -82,6 +82,7 @@
     padding-left: 5%;
     padding-right: 5%;
     flex-grow: 1;
+    text-align: start;
   }
 
   .button-container {
@@ -104,4 +105,13 @@
   margin: 2%;
 }
   
+#buttonRow{
+  display: flex;
+  flex-direction: row;
   
+}
+
+#listContainer{
+  display: flex;
+  align-items: baseline;
+}
