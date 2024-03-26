@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/JarvisMarch.css";
 import computeConvexHull from "../algorithms/JarvisMarch";
 
 var start = { start: true };
 var speed = { speed: 60 };
 var stopViz = { stop: false };
-var JmDone = { start: false };
+var JmDone = { start: true };
 
 function JarvisMarch() {
   const [points, setPoints] = useState([]);
@@ -341,10 +341,113 @@ function JarvisMarch() {
     showSolution(JmDone);
   };
 
+  function minMaxScaling(value, minValue, maxValue, newMin, newMax) {
+    return (
+      ((value - minValue) / (maxValue - minValue)) * (newMax - newMin) + newMin
+    );
+  }
+
+  const fileInputRef = useRef(null);
+
+  const openFileDialog = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (event) => {
+    var canvas = document.getElementById("canvas");
+    var ctx = document.getElementById("canvas").getContext("2d");
+    const rect = canvas.getBoundingClientRect();
+
+    var scaleX = canvas.width / rect.width; // relationship bitmap vs. element for x
+    var scaleY = canvas.height / rect.height;
+    var radius = rect.height / 10;
+
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    var ptsArr = [];
+
+    reader.onload = (e) => {
+      const contents = e.target.result;
+      const rows = contents.split("\n");
+      const data = rows.map((row) => {
+        const values = row.split(",");
+        const pt_x = values[1]; // Value at index 1 (1)
+        const pt_y = values[2]; // Value at index 2 (2)
+        ptsArr = [...ptsArr, { x: pt_x, y: pt_y }];
+      });
+
+      const minX = Math.min(...ptsArr.map((point) => point.x));
+      const maxX = Math.max(...ptsArr.map((point) => point.x));
+      const minY = Math.min(...ptsArr.map((point) => point.y));
+      const maxY = Math.max(...ptsArr.map((point) => point.y));
+
+      const scaledPtsArr = ptsArr.map((point) => ({
+        x:
+          (minMaxScaling(point.x, minX-5, maxX+5, 0, 1) *
+            (rect.right - rect.left + 1) +
+            rect.left -
+            rect.left) *
+          scaleX,
+        y:
+          (minMaxScaling(point.y, minY-5, maxY+5, 0, 1) *
+            (rect.bottom - rect.top + 1) +
+            rect.top -
+            rect.top) *
+          scaleY,
+      }));
+
+      for (var point of scaledPtsArr) {
+        console.log(point);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      setPoints(scaledPtsArr);
+      const newEdges = computeConvexHull(scaledPtsArr);
+      setEdges(newEdges);
+    };
+
+    reader.onerror = (e) => {
+      console.error("File reading error:", e.target.error);
+    };
+
+    reader.readAsText(file);
+  };
+
   return (
     <div className="App">
-      <h1 className="title">Jarvis March Visualization</h1>
-
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-around",
+          width: "100vw",
+          paddingLeft: "20px",
+          paddingRight: "8px",
+        }}
+      >
+        <h1 className="title">Jarvis March Visualization</h1>
+        <div className="custom-file-input-container">
+          <input
+            type="file"
+            id="csvFileInput"
+            accept=".csv"
+            ref={fileInputRef} // Assign the ref to the file input
+            className="custom-file-input"
+            onChange={handleFileChange}
+          />
+          <button
+            className="button-30"
+            style={{ height: "35px" }}
+            onClick={openFileDialog}
+          >
+            Upload CSV File
+          </button>
+          <span className="custom-file-input-label">Choose file</span>
+        </div>
+      </div>
       <canvas
         id="canvas"
         width="800"
