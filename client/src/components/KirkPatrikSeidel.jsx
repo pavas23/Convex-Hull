@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/JarvisMarch.css";
 import nthSmallestPoints from "../algorithms/MedianOfMediansPoints";
 import nthSmallest from "../algorithms/MedianOfMedians";
+import KirkPatrickSeidelAlgorithm from "../algorithms/KirkPatrickSeidelAlgo"; 
 
 class Point {
   constructor(x, y) {
@@ -61,6 +62,19 @@ function KirkPatrikSeidel() {
     setPoints(ptsArr);  
     return ptsArr;
   };
+
+  const findSolution = () => {
+    const edges = KirkPatrickSeidelAlgorithm(points);
+    setEdges(edges);
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw points
+    drawPoints(ctx);
+    // Draw edges
+    drawEdges(ctx);
+  }
 
   // Function to handle mouse click event
   const handleMouseClick = (event, ctx) => {
@@ -507,7 +521,7 @@ const stopExec = async (obj) => {
 
     if (Point.equals(pumin, pumax)) return [pumin];
 
-    var a = nthSmallestPoints(T, Math.floor(T.length / 2));
+    var a = nthSmallestPoints(T, Math.ceil(T.length / 2));
 
     // plotting median line
     ctx.strokeStyle = "green";
@@ -958,11 +972,14 @@ const stopExec = async (obj) => {
         <button onClick={createRandomPoints} className="button-30">
           Random Points
         </button>
+        <button onClick={findSolution} className="button-30">
+          Skip to Solution
+        </button>
         <button onClick={()=>{
           start.start = !start.start
           setStartBtn(!startBtn)
-          }} className="button-30">
-         {startBtn ? 'Pause' : 'Play'} 
+        }} className="button-30">
+          {startBtn ? 'Pause' : 'Play'}
         </button>
       </div>
       <div>
