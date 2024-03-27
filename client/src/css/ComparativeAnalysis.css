@@ -1,0 +1,14 @@
+.comparative-analysis-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.comparative-analysis-title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.chart-container {
+  width: 80%;
+  margin: 0 auto;
+}

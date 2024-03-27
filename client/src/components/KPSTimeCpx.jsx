@@ -41,8 +41,7 @@ function KPSTimeCpx() {
     "\\end{equation}";
   const latexExpression9 = "f(n) = f(\\frac{3n}{4}) + O(n)";
   const latexExpression10 = "f(n) = O(n)";
-  const latexExpression11 =
-    "\\text{Claim : UPPER-HULL takes} \\space O(NlogH_{u}) \\space \\text{where} \\space H_{u} \\space \\text{is the number of vertices on the upper hull and N is the size of the input given to the hull.}";
+  const latexExpression11 = "O(NlogH_{u})";
 
   return (
     <div className="intro">
@@ -68,10 +67,14 @@ function KPSTimeCpx() {
           <div className="introPara" style={{ marginTop: "10px" }}>
             UPPER-BRIDGE runs in O(n) worst case time. Recurrence is \[
             {latexExpression9}\] After solving this we will get \[
-            {latexExpression10}\] \[{latexExpression11}\] Let T(n,h) be the
-            recurrence relation. Here c is a constant and n ≥ h {">"} 1. h
-            <sub>l</sub> and h<sub>r</sub> are number of upper hull edges in
-            recursive calls for left and right side.
+            {latexExpression10}\] Claim : UPPER-HULL takes \[{latexExpression11}
+            \] where, Hu is the number of vertices on the upper hull and N is
+            the size of the input.
+            <br/><br/>
+            Let T(n,h) be the recurrence relation. Here c
+            is a constant and n ≥ h {">"} 1. h<sub>l</sub> and h<sub>r</sub> are
+            number of upper hull edges in recursive calls for left and right
+            side.
             <br />
             <br />
             \[{latexExpression8}\]

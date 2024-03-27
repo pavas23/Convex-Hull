@@ -11,6 +11,7 @@ import KPSTimeCpx from "./components/KPSTimeCpx";
 import JarvisMarchCodeDocumentation from "./components/JarvisMarchCodeDoc";
 import KPSCodeDocumentation from "./components/KPSCodeDocumentation";
 import "./css/App.css"
+import ComparativeAnalysis from "./components/ComparativeAnalysis";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/Kirk-Patrik-Seidel-Time" element={<KPSTimeCpx />}></Route>
           <Route path="/Jarvis-March-Code-Documentation" element={<JarvisMarchCodeDocumentation />}></Route>
           <Route path="/Kirk-Patrik-Seidel-Code-Documentation" element={<KPSCodeDocumentation />}></Route>
+          <Route path="/Comparative-Analysis" element={<ComparativeAnalysis/>}></Route>
         </Routes>
       </Router>
       <Outlet />

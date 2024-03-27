@@ -445,6 +445,15 @@ function Introduction() {
                 <Link to="/Kirk-Patrick-Seidel" class="changeBtn">
                   Kirkpatrick-Seidel Algorithm
                 </Link>
+                <h3
+                  className="introPara"
+                  style={{ fontSize: "30px", textAlign: "center" }}
+                >
+                  Comparative Analysis of Algorithms:
+                </h3>
+                <Link to="/Comparative-Analysis" class="changeBtn">
+                  Compare Execution Time
+                </Link>
               </div>
             </div>
           )}
