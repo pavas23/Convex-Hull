@@ -46,7 +46,7 @@ function Introduction() {
               >
                 <span
                   style={{
-                    marginRight: "2px",
+                    marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 12%",
                     // alignContent: "center",
@@ -74,7 +74,7 @@ function Introduction() {
               >
                 <span
                   style={{
-                    marginRight: "2px",
+                    marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 12%",
                   }}
@@ -102,7 +102,7 @@ function Introduction() {
               >
                 <span
                   style={{
-                    marginRight: "2px",
+                    marginRight: "5px",
                     fontWeight: "bolder",
 
                     fontSize: "20px",
@@ -131,7 +131,7 @@ function Introduction() {
               >
                 <span
                   style={{
-                    marginRight: "2px",
+                    marginRight: "5px",
                     fontWeight: "bolder",
                     fontSize: "20px",
                     flex: "0 0 12%",

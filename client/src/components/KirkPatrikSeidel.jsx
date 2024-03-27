@@ -1139,9 +1139,9 @@ function KirkPatrikSeidel() {
         }}
       >
         <h1 className="title">KPS Visualization</h1>
-        <p style={{ "fontFamily": "JetBrains Mono", fontSize: "15px" }}>
+        {/* <p style={{ "fontFamily": "JetBrains Mono", fontSize: "15px" }}>
           Execution Time : {execTime} ms
-        </p>
+        </p> */}
         <div className="custom-file-input-container">
           <input
             type="file"

@@ -85,7 +85,8 @@ function KPSExplain() {
               <div>KPS(points):</div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 1. Let pumin and pumax be the points with the least and the
-                largest x-coordinate. If points have same x-coordinate then take the point with largest y-coordinate
+                largest x-coordinate. If points have same x-coordinate then take
+                the point with largest y-coordinate
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 2. Find median of x coordinates so as to divide the whole set
@@ -106,12 +107,13 @@ function KPSExplain() {
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 6. Let plmin and plmax be the points with the least and the
-                largest x-coordinate. If points have same x-coordinate then take the point with least y-coordinate
+                largest x-coordinate. If points have same x-coordinate then take
+                the point with least y-coordinate
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
-                7. Use median of x coordinates to divide the whole set
-                into two halves, points to the left on one side and points to
-                the right on the other side.
+                7. Use median of x coordinates to divide the whole set into two
+                halves, points to the left on one side and points to the right
+                on the other side.
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 8. Let T<sub>left</sub> be the set with points to the left and T
@@ -122,7 +124,8 @@ function KPSExplain() {
                 plmin and plmax.
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
-                10. For each point in T, negate the y-coordinate to get its reflection about X-axis.
+                10. For each point in T, negate the y-coordinate to get its
+                reflection about X-axis.
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 11. Reflect plmin and plmax about X-axis
@@ -204,15 +207,14 @@ function KPSExplain() {
                 1. In linear time, randomly pair the points of the input set P
                 into n/2 distinct line segments. Call this set Q, and name each
                 of the n/2 line segments q<sub>i</sub>. Name each endpoint of q
-                <sub>i</sub>
-                according to the following convention:{" "}
+                <sub>i</sub> according to the following convention:{" "}
                 <i>
                   q<sub>li</sub>.x ≤ q<sub>ri</sub>.x
                 </i>{" "}
                 <br />
                 That is to say, endpoints are named in ascending order from left
-                to right. If the size of n is odd, there may be one point
-                thatwhich does not have a partner.
+                to right. If the size of n is odd, there may be one point which
+                does not have a partner.
               </div>
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 2. In linear time, determine the median slope m of all line
@@ -225,18 +227,24 @@ function KPSExplain() {
               <div style={{ marginLeft: "20px", marginTop: "10px" }}>
                 4. Using L, find a point pt such that L is a supporting line for
                 P at pt. We will call the point pt the top point. If the slope m
-                of the sweep line L is such that two points ∈ P lie on L, we
-                choose pt to be the point with the larger x-coordinate.
+                of the sweep line L is such that two or more points ∈ P lie on
+                L, we choose pk to be the point with the smallest x-coordinate
+                and pm to be the point with largest x-coordinate.
+                <br />
                 <br />
                 To prune the set of bridge point candidates, do the following:
               </div>
               <div style={{ marginLeft: "40px", marginTop: "10px" }}>
-                4.1. If x-coordinate of pt ≥ M, for every line segment q<sub>i</sub> in Q
-                whose slope is ≤ m, remove q<sub>ri</sub>
+                4.1. If pk.x ≤ a and pm.x {">"} a, then we return pk, pm as upper
+                bridge points
               </div>
               <div style={{ marginLeft: "40px", marginTop: "10px" }}>
-                4.2. If x-coordinate of pt {'<'} M, for every line segment q<sub>i</sub> in Q
-                whose slope is ≥ m, remove q<sub>li</sub>
+                4.2. If x-coordinate of pk ≥ M, for every line segment q
+                <sub>i</sub> in Q whose slope is ≤ m, remove q<sub>ri</sub>
+              </div>
+              <div style={{ marginLeft: "40px", marginTop: "10px" }}>
+                4.3. If x-coordinate of pm {"<"} M, for every line segment q
+                <sub>i</sub> in Q whose slope is ≥ m, remove q<sub>li</sub>
               </div>
             </div>
           )}

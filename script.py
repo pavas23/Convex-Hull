@@ -9,7 +9,7 @@ os.makedirs(directory, exist_ok=True)
 x_range = (-100, 100)
 y_range = (-100, 100)
 
-num_points_array = [10, 100, 1000, 10000, 100000]
+num_points_array = [10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 10000, 100000]
 
 for num_points in num_points_array:
     file_path = os.path.join(directory, f'random_{num_points}_points.csv')
