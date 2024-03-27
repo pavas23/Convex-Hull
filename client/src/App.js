@@ -10,6 +10,7 @@ import JarvisMarchTimeCpx from "./components/JarvisMarchTimeCpx";
 import KPSTimeCpx from "./components/KPSTimeCpx";
 import JarvisMarchCodeDocumentation from "./components/JarvisMarchCodeDoc";
 import KPSCodeDocumentation from "./components/KPSCodeDocumentation";
+import "./css/App.css"
 
 function App() {
   return (

@@ -21,7 +21,7 @@ function JarvisMarchTimeCpx() {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       />
-      <h1 className="title2" style={{ fontSize: "45px", marginTop: "5px" }}>
+      <h1 className="title2" style={{ fontSize: "45px", marginTop: "10px !important" }}>
         Time Complexiety Analysis: Jarvis March Algorithm
       </h1>
       <div className="carousel">

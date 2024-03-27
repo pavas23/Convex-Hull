@@ -37,7 +37,7 @@ function KirkPatrikSeidel() {
   const [stopV, setStopV] = useState(false);
   const [speedUp, setSpeedUp] = useState(false);
   const [slowDown, setSlowDown] = useState(false);
-  const [execTime,setExecTime] = useState(0.0);
+  const [execTime, setExecTime] = useState(0.0);
   var upperBridges = [];
   var lowerBridges = [];
 
@@ -96,8 +96,9 @@ function KirkPatrikSeidel() {
     const edges = KirkPatrickSeidelAlgorithm(points);
     const end = performance.now();
     const executionTime = end - start;
-    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
-  }
+    if (executionTime !== null && !isNaN(executionTime))
+      setExecTime(parseFloat(executionTime));
+  };
 
   const findSolution = async () => {
     stopViz.stop = true;
@@ -107,7 +108,8 @@ function KirkPatrikSeidel() {
     const edges = KirkPatrickSeidelAlgorithm(points);
     const end = performance.now();
     const executionTime = end - start;
-    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+    if (executionTime !== null && !isNaN(executionTime))
+      setExecTime(parseFloat(executionTime));
 
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -1080,8 +1082,8 @@ function KirkPatrikSeidel() {
       const rows = contents.split("\n");
       const data = rows.map((row) => {
         const values = row.split(",");
-        const pt_x = values[1]; // Value at index 1 (1)
-        const pt_y = values[2]; // Value at index 2 (2)
+        const pt_x = values[0];
+        const pt_y = values[1];
         ptsArr = [...ptsArr, { x: pt_x, y: pt_y }];
       });
 
@@ -1136,7 +1138,9 @@ function KirkPatrikSeidel() {
         }}
       >
         <h1 className="title">KPS Visualization</h1>
-        <h5>Execution Time : {execTime} ms</h5>
+        <p style={{ "fontFamily": "JetBrains Mono", fontSize: "15px" }}>
+          Execution Time : {execTime} ms
+        </p>
         <div className="custom-file-input-container">
           <input
             type="file"

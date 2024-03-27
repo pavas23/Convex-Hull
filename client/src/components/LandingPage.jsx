@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/landing.css";
+import "../css/Landing.css";
 import { Link } from "react-router-dom";
 
 const LandingPage = () => {
@@ -7,6 +7,7 @@ const LandingPage = () => {
     <div className="text-container">
       <div className="page">
         <h1 className="title1">CS F364 DAA Assignment 1</h1>
+        <h3 className="title1">Convex Hull</h3>
         <div className="entryGrid">
           <div className="entryRow">
             <Entry str={"Atharva Dashora"} />

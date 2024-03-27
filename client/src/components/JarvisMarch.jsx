@@ -14,7 +14,7 @@ function JarvisMarch() {
   const [startBtn, setStartBtn] = useState(start.start);
   const [speedUp, setSpeedUp] = useState(false);
   const [slowDown, setSlowDown] = useState(false);
-  const [execTime,setExecTime] = useState(0.0);
+  const [execTime, setExecTime] = useState(0.0);
 
   const createRandomPoints = () => {
     var canvas = document.getElementById("canvas");
@@ -84,8 +84,9 @@ function JarvisMarch() {
     var edges = computeConvexHull(points);
     const end = performance.now();
     const executionTime = end - start;
-    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
-  }
+    if (executionTime !== null && !isNaN(executionTime))
+      setExecTime(parseFloat(executionTime));
+  };
 
   const showSolution = async (JmDone) => {
     var canvas = document.getElementById("canvas");
@@ -96,7 +97,8 @@ function JarvisMarch() {
     var edges = computeConvexHull(points);
     const end = performance.now();
     const executionTime = end - start;
-    if(executionTime !== null && !isNaN(executionTime)) setExecTime(parseFloat(executionTime));
+    if (executionTime !== null && !isNaN(executionTime))
+      setExecTime(parseFloat(executionTime));
 
     await stopExec(JmDone);
     drawPoints(ctx);
@@ -377,8 +379,8 @@ function JarvisMarch() {
       const rows = contents.split("\n");
       const data = rows.map((row) => {
         const values = row.split(",");
-        const pt_x = values[1]; // Value at index 1 (1)
-        const pt_y = values[2]; // Value at index 2 (2)
+        const pt_x = values[0];
+        const pt_y = values[1];
         ptsArr = [...ptsArr, { x: pt_x, y: pt_y }];
       });
 
@@ -389,13 +391,13 @@ function JarvisMarch() {
 
       const scaledPtsArr = ptsArr.map((point) => ({
         x:
-          (minMaxScaling(point.x, minX-5, maxX+5, 0, 1) *
+          (minMaxScaling(point.x, minX - 5, maxX + 5, 0, 1) *
             (rect.right - rect.left + 1) +
             rect.left -
             rect.left) *
           scaleX,
         y:
-          (minMaxScaling(point.y, minY-5, maxY+5, 0, 1) *
+          (minMaxScaling(point.y, minY - 5, maxY + 5, 0, 1) *
             (rect.bottom - rect.top + 1) +
             rect.top -
             rect.top) *
@@ -434,7 +436,9 @@ function JarvisMarch() {
         }}
       >
         <h1 className="title">Jarvis March Visualization</h1>
-        <h5>Execution Time : {execTime} ms</h5>
+        <p style={{ fontFamily: "JetBrains Mono", fontSize: "15px" }}>
+          Execution Time : {execTime} ms
+        </p>
         <div className="custom-file-input-container">
           <input
             type="file"
