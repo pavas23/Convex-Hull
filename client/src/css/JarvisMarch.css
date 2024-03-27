@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
   background-color: #f0f0f0;
   height: 100vh;
@@ -7,6 +7,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: linear-gradient(45deg, #f0f0f0, #e0e0e0);
 }
 
 canvas {
@@ -30,4 +31,50 @@ canvas {
 
 .redrawButton:hover {
   background-color: #0056b3;
+} 
+ */
+
+
+ /* CSS for Jarvis March component */
+
+.App {
+  text-align: center;
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto', sans-serif; /* Example font-family */
 }
+
+canvas {
+  border: 2px solid #333;
+  background-color: #fff;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+.redrawButton {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.redrawButton:hover {
+  background-color: #0056b3;
+}
+
+/* Animations */
+canvas {
+  transition: transform 0.3s ease;
+}
+
+
+
