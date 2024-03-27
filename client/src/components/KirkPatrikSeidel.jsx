@@ -1079,8 +1079,9 @@ function KirkPatrikSeidel() {
 
     reader.onload = (e) => {
       const contents = e.target.result;
-      const rows = contents.split("\n");
+      var rows = contents.split("\n");
       const data = rows.map((row) => {
+        console.log(row);
         const values = row.split(",");
         const pt_x = values[0];
         const pt_y = values[1];
