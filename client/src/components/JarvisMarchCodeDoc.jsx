@@ -43,7 +43,7 @@ function JarvisMarchCodeDocumentation() {
                 </div>
                 <div className="textContainer">
                   <p style={{ marginTop: "0" }}>
-                  <h3>Function: computeConvexHull(points)</h3>
+                  <h3 style={{"marginTop":"0px"}}>Function: computeConvexHull(points)</h3>
                     <p>
                       This function calculates the convex hull of a set of points.
                     </p>
