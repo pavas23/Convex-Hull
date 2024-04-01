@@ -3,6 +3,7 @@ import "../css/JarvisMarch.css";
 import nthSmallestPoints from "../algorithms/MedianOfMediansPoints";
 import nthSmallest from "../algorithms/MedianOfMedians";
 import KirkPatrickSeidelAlgorithm from "../algorithms/KirkPatrickSeidelAlgo";
+import computeConvexHull from "../algorithms/JarvisMarch";
 
 class Point {
   constructor(x, y) {

@@ -66,7 +66,7 @@ function JarvisMarchCodeDocumentation() {
                </div>
                <div className="textContainer">
                  <p style={{ marginTop: "0" }}>
-                 <h3> Function: orientation(p, q, r)</h3>
+                 <h3 style={{"marginTop":"0px"}}> Function: orientation(p, q, r)</h3>
                   <p>
                     This function determines the orientation of three points, denoted as <code>p</code>, <code>q</code>, and <code>r</code>, in a two-dimensional plane.
                   </p>
