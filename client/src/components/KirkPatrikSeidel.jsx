@@ -50,7 +50,7 @@ function KirkPatrikSeidel() {
     const rect = canvas.getBoundingClientRect();
     var scaleX = canvas.width / rect.width; // relationship bitmap vs. element for x
     var scaleY = canvas.height / rect.height;
-    console.log(scaleX, scaleY);
+    // console.log(scaleX, scaleY);
     setHeight(rect.height);
     setScaleYState(scaleY);
     while (pts--) {
@@ -65,7 +65,7 @@ function KirkPatrikSeidel() {
       ctx.arc(x, rect.height * scaleY - y, 3, 0, Math.PI * 2);
       ctx.fill();
     }
-    console.log(ptsArr);
+    // console.log(ptsArr);
     ptsArr = [...points, ...ptsArr];
     setPoints(ptsArr);
     return ptsArr;
@@ -106,7 +106,13 @@ function KirkPatrikSeidel() {
     setStopV(true);
 
     const start = performance.now();
-    const edges = KirkPatrickSeidelAlgorithm(points);
+    const edges_temp = computeConvexHull(points);
+    var edges = [];
+    for(var edge of edges_temp){
+      if(edge.flag == 2){
+        edges.push([new Point(edge.p1.x,edge.p1.y),new Point(edge.p2.x,edge.p2.y)]);
+      }
+    }
     const end = performance.now();
     const executionTime = end - start;
     if (executionTime !== null && !isNaN(executionTime))
@@ -192,8 +198,6 @@ function KirkPatrikSeidel() {
     if (stopViz.stop) {
       return;
     }
-    console.log("ewfew");
-    console.log(edges);
     for (let edge of edges) {
       ctx.strokeStyle = "green";
       ctx.lineWidth = 1;
@@ -1082,7 +1086,6 @@ function KirkPatrikSeidel() {
       const contents = e.target.result;
       var rows = contents.split("\n");
       const data = rows.map((row) => {
-        console.log(row);
         const values = row.split(",");
         const pt_x = values[0];
         const pt_y = values[1];
@@ -1109,14 +1112,13 @@ function KirkPatrikSeidel() {
       const scaledNewPts = [];
       for (var point of scaledPtsArr) {
         scaledNewPts.push(new Point(point.x, point.y));
-        console.log(point);
         ctx.fillStyle = "blue";
         ctx.beginPath();
         ctx.arc(point.x, rect.height * scaleY - point.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      console.log("scaled points are", scaledNewPts);
+      // console.log("scaled points are", scaledNewPts);
       setPoints(scaledNewPts);
     };
 
