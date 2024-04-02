@@ -11,16 +11,21 @@ import kps_code_4_1 from "../images/kps_code_4_1.jpg";
 import kps_code_4_2 from "../images/kps_code_4_2.jpg";
 import kps_code_4_3 from "../images/kps_code_4_3.jpg";
 import kps_code_4_4 from "../images/kps_code_4_4.jpg";
+import mom_code_1 from "../images/mom_code_1.jpg";
+import mom_code_2 from "../images/mom_code_2.jpg";
+import mom_code_3 from "../images/mom_code_3.jpg";
+import mom_code_4 from "../images/mom_code_4.jpg";
+import mom_code_5 from "../images/mom_code_5.jpg";
 
 function KPSCodeDocumentation() {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const nextSlide = () => {
-    setSlideIndex((prevIndex) => (prevIndex + 1) % 4);
+    setSlideIndex((prevIndex) => (prevIndex + 1) % 9);
   };
 
   const prevSlide = () => {
-    setSlideIndex((prevIndex) => (prevIndex - 1 + 4) % 4);
+    setSlideIndex((prevIndex) => (prevIndex - 1 + 4) % 9);
   };
 
   return (
@@ -736,6 +741,321 @@ function KPSCodeDocumentation() {
                           The nthSmallestPoints function, which returns the nth
                           smallest point in an array of points based on its
                           x-coordinate (used to find the median in this case).
+                        </li>
+                      </ul>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {slideIndex === 4 && (
+            <div className="introPara">
+              <div
+                className="imgContainerOuter"
+                style={{ alignItems: "flex-start" }}
+              >
+                <div className="imgContainerInner">
+                  <img
+                    src={mom_code_1}
+                    alt="mom_code_1"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+                <div className="textContainer">
+                  <p style={{ marginTop: "0" }}>
+                    <div>
+                      <h2 style={{ marginTop: "0px" }}>
+                        Function Name: nthSmallest
+                      </h2>
+                    </div>
+
+                    <div>
+                      <h3>Purpose:</h3>
+                      <ul>
+                        <li>
+                          This function takes an array of elements (list) and an
+                          integer (n). It utilizes the select function to
+                          determine the index of the nth smallest element in the
+                          list. Finally, it returns the element at that index.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Inputs:</h3>
+                      <ul>
+                        <li>
+                          <strong>list:</strong> An array of elements.
+                        </li>
+                        <li>
+                          <strong>n:</strong> An integer representing the
+                          desired rank of the element to find.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Output:</h3>
+                      <ul>
+                        <li>The nth smallest element from the list.</li>
+                      </ul>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {slideIndex === 5 && (
+            <div className="introPara">
+              <div
+                className="imgContainerOuter"
+                style={{ alignItems: "flex-start" }}
+              >
+                <div className="imgContainerInner">
+                  <img
+                    src={mom_code_2}
+                    alt="mom_code_2"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+                <div className="textContainer">
+                  <p style={{ marginTop: "0" }}>
+                    <div>
+                      <h2 style={{ marginTop: "0px" }}>
+                        Function Name: select
+                      </h2>
+                    </div>
+
+                    <div>
+                      <h3>Purpose:</h3>
+                      <ul>
+                        <li>
+                          The select function is a helper function used by
+                          nthSmallest to find the index of the nth smallest
+                          element in a sublist. It employs a variation of the
+                          quickselect algorithm, continuously partitioning the
+                          sublist until it locates the desired element.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Inputs:</h3>
+                      <ul>
+                        <li>
+                          <strong>list:</strong> An array of elements.
+                        </li>
+                        <li>
+                          <strong>left:</strong> The left index of the sublist.
+                        </li>
+                        <li>
+                          <strong>right:</strong> The right index of the
+                          sublist.
+                        </li>
+                        <li>
+                          <strong>n:</strong>The desired rank of the element to
+                          find.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Output:</h3>
+                      <ul>
+                        <li>
+                          The index of the nth smallest element in the sublist.
+                        </li>
+                      </ul>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {slideIndex === 6 && (
+            <div className="introPara">
+              <div
+                className="imgContainerOuter"
+                style={{ alignItems: "flex-start" }}
+              >
+                <div className="imgContainerInner">
+                  <img
+                    src={mom_code_3}
+                    alt="mom_code_3"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+                <div className="textContainer">
+                  <p style={{ marginTop: "0" }}>
+                    <div>
+                      <h2 style={{ marginTop: "0px" }}>Function Name: pivot</h2>
+                    </div>
+
+                    <div>
+                      <h3>Purpose:</h3>
+                      <ul>
+                        <li>
+                          The pivot function selects a pivot element to
+                          facilitate partitioning. It aims to find a "good"
+                          pivot to ensure efficient partitioning. It utilizes
+                          the median-of-medians algorithm to select an
+                          appropriate pivot.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Inputs:</h3>
+                      <ul>
+                        <li>
+                          <strong>list:</strong> An array of elements.
+                        </li>
+                        <li>
+                          <strong>left:</strong> The left index of the sublist.
+                        </li>
+                        <li>
+                          <strong>right:</strong> The right index of the
+                          sublist.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Output:</h3>
+                      <ul>
+                        <li>The index of the selected pivot element.</li>
+                      </ul>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {slideIndex === 7 && (
+            <div className="introPara">
+              <div
+                className="imgContainerOuter"
+                style={{ alignItems: "flex-start" }}
+              >
+                <div className="imgContainerInner">
+                  <img
+                    src={mom_code_4}
+                    alt="mom_code_4"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+                <div className="textContainer">
+                  <p style={{ marginTop: "0" }}>
+                    <div>
+                      <h2 style={{ marginTop: "0px" }}>
+                        Function Name: partition
+                      </h2>
+                    </div>
+
+                    <div>
+                      <h3>Purpose:</h3>
+                      <ul>
+                        <li>
+                          The partition function partitions the sublist around a
+                          pivot element. It rearranges the elements such that
+                          elements smaller than the pivot are placed to its
+                          left, while elements greater than the pivot are placed
+                          to its right.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Inputs:</h3>
+                      <ul>
+                        <li>
+                          <strong>list:</strong> An array of elements.
+                        </li>
+                        <li>
+                          <strong>left:</strong> The left index of the sublist.
+                        </li>
+                        <li>
+                          <strong>right:</strong> The right index of the
+                          sublist.
+                        </li>
+                        <li>
+                          <strong>pivotIndex:</strong> The index of the pivot
+                          element.
+                        </li>
+                        <li>
+                          <strong>n:</strong> The desired rank of the element to
+                          find.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Output:</h3>
+                      <ul>
+                        <li>
+                          The index of the nth smallest element in the sublist.
+                        </li>
+                      </ul>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {slideIndex === 8 && (
+            <div className="introPara">
+              <div
+                className="imgContainerOuter"
+                style={{ alignItems: "flex-start" }}
+              >
+                <div className="imgContainerInner">
+                  <img
+                    src={mom_code_5}
+                    alt="mom_code_5"
+                    style={{ maxWidth: "100%" }}
+                  />
+                </div>
+                <div className="textContainer">
+                  <p style={{ marginTop: "0" }}>
+                    <div>
+                      <h2 style={{ marginTop: "0px" }}>
+                        Function Name: partition5
+                      </h2>
+                    </div>
+
+                    <div>
+                      <h3>Purpose:</h3>
+                      <ul>
+                        <li>
+                          The partition5 function partitions a small sublist of
+                          5 elements to assist in pivot selection. It applies a
+                          simple sorting algorithm, here we used bubble sort.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Inputs:</h3>
+                      <ul>
+                        <li>
+                          <strong>list:</strong> An array of elements.
+                        </li>
+                        <li>
+                          <strong>left:</strong> The left index of the sublist.
+                        </li>
+                        <li>
+                          <strong>right:</strong> The right index of the
+                          sublist.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3>Output:</h3>
+                      <ul>
+                        <li>
+                          The index of the median element within the sublist.
                         </li>
                       </ul>
                     </div>
