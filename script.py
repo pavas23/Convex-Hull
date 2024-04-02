@@ -6,8 +6,8 @@ directory = '__test__'
 os.makedirs(directory, exist_ok=True)
 
 # Define the range for x and y coordinates
-x_range = (-100, 100)
-y_range = (-100, 100)
+x_range = (-100000, 100000)
+y_range = (-100000, 100000)
 
 num_points_array = [10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 10000, 100000]
 
