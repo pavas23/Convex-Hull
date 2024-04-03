@@ -32,22 +32,21 @@ function JarvisMarchExplain() {
         </Link>
       </div>
       <div className="carousel">
-        
         <div className="slide">
           {slideIndex === 0 && (
-            <div className="introPara" style={{textAlign:'center'}}>
+            <div className="introPara" style={{ textAlign: "center" }}>
               The Jarvis march algorithm, also known as the gift wrapping
               algorithm, finds the convex hull of a set of points in two
               dimensions.
               <br />
               <br />
-              <strong style={{fontSize:'larger'}}>Algorithm:</strong>
+              <strong style={{ fontSize: "larger" }}>Algorithm:</strong>
               <div
                 style={{
                   textAlign: "start",
                   marginTop: "20px",
                   fontFamily: "Verdana, Geneva, Tahoma, sans-serif",
-                  fontSize:'large'
+                  fontSize: "large",
                 }}
               >
                 <div>JarvisMarch(points):</div>

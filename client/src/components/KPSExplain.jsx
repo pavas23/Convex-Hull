@@ -235,8 +235,8 @@ function KPSExplain() {
                 To prune the set of bridge point candidates, do the following:
               </div>
               <div style={{ marginLeft: "40px", marginTop: "10px" }}>
-                4.1. If pk.x ≤ a and pm.x {">"} a, then we return pk, pm as upper
-                bridge points
+                4.1. If pk.x ≤ a and pm.x {">"} a, then we return pk, pm as
+                upper bridge points
               </div>
               <div style={{ marginLeft: "40px", marginTop: "10px" }}>
                 4.2. If x-coordinate of pk ≥ M, for every line segment q

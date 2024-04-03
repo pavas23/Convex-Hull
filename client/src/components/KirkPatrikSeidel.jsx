@@ -26,11 +26,11 @@ var start = { start: true };
 var stopViz = { stop: false };
 var speed = { speed: 1500 };
 var kpsDone = { start: true };
-var fileUpload = {upload:false}
+var fileUpload = { upload: false };
 
 function KirkPatrikSeidel() {
   const [points, setPoints] = useState([]);
-  const [svdPts,setSvdPts] = useState([]);
+  const [svdPts, setSvdPts] = useState([]);
   const [edges, setEdges] = useState([]);
   const [height, setHeight] = useState(0);
   const [scaleYState, setScaleYState] = useState(0);
@@ -85,7 +85,7 @@ function KirkPatrikSeidel() {
     }
   };
 
-  const drawPointsSolution = (ctx,points) => {
+  const drawPointsSolution = (ctx, points) => {
     ctx.fillStyle = "blue";
     for (let point of points) {
       ctx.beginPath();
@@ -110,9 +110,12 @@ function KirkPatrikSeidel() {
     const start = performance.now();
     const edges_temp = computeConvexHull(points);
     var edges = [];
-    for(var edge of edges_temp){
-      if(edge.flag == 2){
-        edges.push([new Point(edge.p1.x,edge.p1.y),new Point(edge.p2.x,edge.p2.y)]);
+    for (var edge of edges_temp) {
+      if (edge.flag == 2) {
+        edges.push([
+          new Point(edge.p1.x, edge.p1.y),
+          new Point(edge.p2.x, edge.p2.y),
+        ]);
       }
     }
     const end = performance.now();
@@ -122,12 +125,12 @@ function KirkPatrikSeidel() {
 
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect()
+    const rect = canvas.getBoundingClientRect();
     await stopExec(kpsDone);
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw points
-    if(fileUpload.upload){
+    if (fileUpload.upload) {
       const minX = Math.min(...points.map((point) => point.x));
       const maxX = Math.max(...points.map((point) => point.x));
       const minY = Math.min(...points.map((point) => point.y));
@@ -145,30 +148,40 @@ function KirkPatrikSeidel() {
               (rect.bottom - rect.top + 1)) *
           scaleY,
       }));
-  
+
       const scaledNewPts = [];
       for (var point of scaledPtsArr) {
         scaledNewPts.push(new Point(point.x, point.y));
       }
-  
-      drawPointsSolution(ctx,scaledNewPts);
-      console.log('new pts',scaledNewPts)
-      const scaledEdges = []
-      for(var edge of edges){
-        var e = []
-        for(var point of edge){
-          e.push(new Point(minMaxScaling(point.x, minX - 10, maxX + 10, 0.1, 0.9) * (rect.right - rect.left + 1) *scaleX, (rect.height-minMaxScaling(point.y, minY - 10, maxY + 10, 0.1, 0.9) *(rect.bottom - rect.top + 1)) *scaleY))
+
+      drawPointsSolution(ctx, scaledNewPts);
+      // console.log("new pts", scaledNewPts);
+      const scaledEdges = [];
+      for (var edge of edges) {
+        var e = [];
+        for (var point of edge) {
+          e.push(
+            new Point(
+              minMaxScaling(point.x, minX - 10, maxX + 10, 0.1, 0.9) *
+                (rect.right - rect.left + 1) *
+                scaleX,
+              (rect.height -
+                minMaxScaling(point.y, minY - 10, maxY + 10, 0.1, 0.9) *
+                  (rect.bottom - rect.top + 1)) *
+                scaleY
+            )
+          );
         }
-        scaledEdges.push(e)
-      }  
-      console.log('edges',edges)
-        console.log('scaled edges',scaledEdges)
+        scaledEdges.push(e);
+      }
+      // console.log("edges", edges);
+      // console.log("scaled edges", scaledEdges);
       drawEdgesSolution(ctx, scaledEdges);
-    }else{
-      drawPointsSolution(ctx,points);
+    } else {
+      drawPointsSolution(ctx, points);
       drawEdgesSolution(ctx, edges);
     }
-    fileUpload.upload  = false
+    fileUpload.upload = false;
   };
 
   // Function to handle mouse click event
@@ -296,11 +309,10 @@ function KirkPatrikSeidel() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw points
     drawPoints(ctx, stopViz);
-    var newEdges = []
-    if(fileUpload.upload){
+    var newEdges = [];
+    if (fileUpload.upload) {
       newEdges = await KirkPatrickSeidel(svdPts, start, kpsDone);
-
-    }else{
+    } else {
       newEdges = await KirkPatrickSeidel(points, start, kpsDone);
     }
     findExecutionTime();
@@ -1138,7 +1150,7 @@ function KirkPatrikSeidel() {
         const values = row.split(",");
         const pt_x = values[0];
         const pt_y = values[1];
-        ptsArr = [...ptsArr, new Point(parseFloat(pt_x),parseFloat(pt_y))];
+        ptsArr = [...ptsArr, new Point(parseFloat(pt_x), parseFloat(pt_y))];
       });
 
       const minX = Math.min(...ptsArr.map((point) => point.x));
@@ -1166,10 +1178,10 @@ function KirkPatrikSeidel() {
         ctx.fill();
       }
 
-      console.log("scaled points are", scaledNewPts);
-      console.log(" points are", ptsArr);
+      // console.log("scaled points are", scaledNewPts);
+      // console.log(" points are", ptsArr);
       setPoints(ptsArr);
-      setSvdPts(scaledNewPts)
+      setSvdPts(scaledNewPts);
     };
 
     reader.onerror = (e) => {
@@ -1177,7 +1189,7 @@ function KirkPatrikSeidel() {
     };
 
     reader.readAsText(file);
-    fileUpload.upload  = true
+    fileUpload.upload = true;
   };
 
   return (
@@ -1244,7 +1256,7 @@ function KirkPatrikSeidel() {
         >
           Random Points
         </button>
-        <button onClick={()=>findSolution(fileUpload)} className="button-30">
+        <button onClick={() => findSolution(fileUpload)} className="button-30">
           Show Solution
         </button>
         <button

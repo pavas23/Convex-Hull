@@ -112,14 +112,14 @@
   align-items: baseline;
 }
 
-.imgContainerOuter{
+.imgContainerOuter {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.imgContainerInner{
+.imgContainerInner {
   flex: 1;
   margin-right: 20px;
 }

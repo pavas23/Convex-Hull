@@ -21,7 +21,7 @@ class Pair {
 
 function upperBridge(T, a) {
     var candidates = []
-    if(T.length == 0){
+    if (T.length == 0) {
         return []
     }
     if (T.length == 1) return T
@@ -60,12 +60,12 @@ function upperBridge(T, a) {
 
     var median_slope = 0;
     if (slopes.length % 2 == 0) {
-      median_slope =
-        (nthSmallest(slopes, slopes.length / 2) +
-          nthSmallest(slopes, slopes.length / 2 + 1)) /
-        2;
+        median_slope =
+            (nthSmallest(slopes, slopes.length / 2) +
+                nthSmallest(slopes, slopes.length / 2 + 1)) /
+            2;
     } else {
-      median_slope = nthSmallest(slopes, Math.ceil(slopes.length / 2));
+        median_slope = nthSmallest(slopes, Math.ceil(slopes.length / 2));
     }
 
     var small = []
@@ -154,7 +154,7 @@ function upperHull(pumin, pumax, T) {
         pl = pr
         pr = temp
     }
-     else if (pl.x === pr.x && pl.y > pr.y) {
+    else if (pl.x === pr.x && pl.y > pr.y) {
         var temp = pl
         pl = pr
         pr = temp
@@ -173,7 +173,7 @@ function upperHull(pumin, pumax, T) {
     }
 
     ref_pt = new Point(Math.floor((pr.x + pumax.x) / 2), Math.max(pr.y, pumax.y) + 2)
-    ref_dist = (ref_pt.x - pumax.x) * (pr.y- pumax.y) - (ref_pt.y - pumax.y) * (pr.x - pumax.x)
+    ref_dist = (ref_pt.x - pumax.x) * (pr.y - pumax.y) - (ref_pt.y - pumax.y) * (pr.x - pumax.x)
     for (var p of T) {
         var dist = (p.x - pumax.x) * (pr.y - pumax.y) - (p.y - pumax.y) * (pr.x - pumax.x)
         if (dist * ref_dist > 0) {
@@ -181,7 +181,7 @@ function upperHull(pumin, pumax, T) {
         }
 
     }
-    
+
     // console.log("see left", pumin, pl, T_left)
     // console.log("see right", pr, pumax, T_right)
     var leftList = (Point.equals(pumin, pl)) ? [pl] : upperHull(pumin, pl, T_left)
@@ -221,10 +221,10 @@ function lowerHull(points) {
 }
 
 function KirkPatrickSeidelAlgorithm(points) {
-    if(points.length === 0){
+    if (points.length === 0) {
         return [];
     }
-    
+
     var pumin = new Point(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
     var pumax = new Point(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
     for (var p of points) {

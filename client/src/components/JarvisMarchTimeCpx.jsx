@@ -1,8 +1,7 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import "../css/Introduction.css";
 import jm1 from "../images/jm1.jpg";
 import jm2 from "../images/jm2.jpg";
-
 
 function JarvisMarchTimeCpx() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -14,14 +13,17 @@ function JarvisMarchTimeCpx() {
   const prevSlide = () => {
     setSlideIndex((prevIndex) => (prevIndex - 1 + 2) % 2);
   };
-  
+
   return (
     <div className="intro">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       />
-      <h1 className="title2" style={{ fontSize: "45px", marginTop: "10px !important" }}>
+      <h1
+        className="title2"
+        style={{ fontSize: "45px", marginTop: "10px !important" }}
+      >
         Time Complexiety Analysis: Jarvis March Algorithm
       </h1>
       <div className="carousel">
@@ -66,16 +68,19 @@ function JarvisMarchTimeCpx() {
           {slideIndex === 1 && (
             <div className="introPara" style={{ textAlign: "start" }}>
               The inner loop checks every point in the set S, and the outer loop
-              repeats for each point on the hull. Hence the total run time is 
+              repeats for each point on the hull. Hence the total run time is
               <i> O(nh)</i>
               <br />
               <br />
               In the worst case, all the n points are on the hull, so we get{" "}
-              <i> O( n<sup>2</sup> )</i>
+              <i>
+                {" "}
+                O( n<sup>2</sup> )
+              </i>
               <br />
               <br />
-              Since the run time depends on the size of the output, so Jarvis's march
-              is an output sensitive algorithm.
+              Since the run time depends on the size of the output, so Jarvis's
+              march is an output sensitive algorithm.
             </div>
           )}
         </div>

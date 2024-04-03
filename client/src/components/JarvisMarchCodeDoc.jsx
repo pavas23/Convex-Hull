@@ -46,52 +46,90 @@ function JarvisMarchCodeDocumentation() {
                 </div>
                 <div className="textContainer">
                   <p style={{ marginTop: "0" }}>
-                  <h3 style={{"marginTop":"0px"}}>Function: computeConvexHull(points)</h3>
+                    <h3 style={{ marginTop: "0px" }}>
+                      Function: computeConvexHull(points)
+                    </h3>
                     <p>
-                      This function calculates the convex hull of a set of points.
+                      This function calculates the convex hull of a set of
+                      points.
                     </p>
                     <h4>Parameters:</h4>
                     <ul>
-                      <li><code>points</code>: An array of points in the plane.</li>
+                      <li>
+                        <code>points</code>: An array of points in the plane.
+                      </li>
                     </ul>
                     <h4>Return Value:</h4>
-                    <p>
-                      An array of edges representing the convex hull.
-                    </p>
+                    <p>An array of edges representing the convex hull.</p>
 
                     <h4>Key Steps:</h4>
                     <ol>
-                      <li><strong>Base Cases:</strong>
+                      <li>
+                        <strong>Base Cases:</strong>
                         <ul>
-                          <li>If the number of points is less than 2, return an empty array (no convex hull).</li>
-                          <li>If there are exactly 2 points, return an array containing a single edge connecting these two points.</li>
+                          <li>
+                            If the number of points is less than 2, return an
+                            empty array (no convex hull).
+                          </li>
+                          <li>
+                            If there are exactly 2 points, return an array
+                            containing a single edge connecting these two
+                            points.
+                          </li>
                         </ul>
                       </li>
-                      <li><strong>Initialize Variables:</strong>
+                      <li>
+                        <strong>Initialize Variables:</strong>
                         <ul>
-                          <li>Initialize an empty array <code>edges</code> to store the edges of the convex hull.</li>
-                          <li>Find the leftmost point <code>l</code> among the input points.</li>
+                          <li>
+                            Initialize an empty array <code>edges</code> to
+                            store the edges of the convex hull.
+                          </li>
+                          <li>
+                            Find the leftmost point <code>l</code> among the
+                            input points.
+                          </li>
                         </ul>
                       </li>
-                      <li><strong>Algorithm:</strong>
+                      <li>
+                        <strong>Algorithm:</strong>
                         <ul>
-                          <li>Start from the leftmost point <code>p</code>.</li>
-                          <li>Loop until the start point <code>p</code> is reached again:</li>
+                          <li>
+                            Start from the leftmost point <code>p</code>.
+                          </li>
+                          <li>
+                            Loop until the start point <code>p</code> is reached
+                            again:
+                          </li>
                           <li>
                             Iterate through all points <code>i</code>:
                             <ul>
-                              <li>Determine if point <code>i</code> is more counterclockwise than the next point <code>q</code>.</li>
-                              <li>Update <code>q</code> if the above is true.</li>
-                              <li>Create an edge between <code>p</code> and <code>i</code>, setting a flag indicating if it is a part of the convex hull for better visualization.</li>
-                              <li>Push the edge to the <code>edges</code> array.</li>
+                              <li>
+                                Determine if point <code>i</code> is more
+                                counterclockwise than the next point{" "}
+                                <code>q</code>.
+                              </li>
+                              <li>
+                                Update <code>q</code> if the above is true.
+                              </li>
+                              <li>
+                                Create an edge between <code>p</code> and{" "}
+                                <code>i</code>, setting a flag indicating if it
+                                is a part of the convex hull for better
+                                visualization.
+                              </li>
+                              <li>
+                                Push the edge to the <code>edges</code> array.
+                              </li>
                             </ul>
                           </li>
-                          <li>Include the final edge from the last point <code>p</code> to the starting point <code>l</code>.</li>
+                          <li>
+                            Include the final edge from the last point{" "}
+                            <code>p</code> to the starting point <code>l</code>.
+                          </li>
                         </ul>
                       </li>
                     </ol>
-
-
                   </p>
                 </div>
               </div>

@@ -70,11 +70,11 @@ function KPSTimeCpx() {
             {latexExpression10}\] Claim : UPPER-HULL takes \[{latexExpression11}
             \] where, Hu is the number of vertices on the upper hull and N is
             the size of the input.
-            <br/><br/>
-            Let T(n,h) be the recurrence relation. Here c
-            is a constant and n ≥ h {">"} 1. h<sub>l</sub> and h<sub>r</sub> are
-            number of upper hull edges in recursive calls for left and right
-            side.
+            <br />
+            <br />
+            Let T(n,h) be the recurrence relation. Here c is a constant and n ≥
+            h {">"} 1. h<sub>l</sub> and h<sub>r</sub> are number of upper hull
+            edges in recursive calls for left and right side.
             <br />
             <br />
             \[{latexExpression8}\]

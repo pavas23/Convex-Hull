@@ -28,7 +28,7 @@ function App() {
           <Route path="/Kirk-Patrik-Seidel-Time" element={<KPSTimeCpx />}></Route>
           <Route path="/Jarvis-March-Code-Documentation" element={<JarvisMarchCodeDocumentation />}></Route>
           <Route path="/Kirk-Patrik-Seidel-Code-Documentation" element={<KPSCodeDocumentation />}></Route>
-          <Route path="/Comparative-Analysis" element={<ComparativeAnalysis/>}></Route>
+          <Route path="/Comparative-Analysis" element={<ComparativeAnalysis />}></Route>
         </Routes>
       </Router>
       <Outlet />
