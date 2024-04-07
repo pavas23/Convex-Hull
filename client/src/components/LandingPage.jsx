@@ -8,7 +8,7 @@ const LandingPage = () => {
       <div className="page">
         <h1 className="title1">CS F364 DAA Assignment 1</h1>
         <h3 className="title1">Convex Hull</h3>
-        <div className="entryGrid">
+        {/* <div className="entryGrid">
           <div className="entryRow">
             <Entry str={"Atharva Dashora"} />
             <Entry str={"2021A7PS0127H"} />
@@ -29,7 +29,7 @@ const LandingPage = () => {
             <Entry str={"Vassvik Sai Reddy Jampala"} />
             <Entry str={"2021A7PS0109H"} />
           </div>
-        </div>
+        </div> */}
         <Link to="/introduction" className="button-31" disabled={false}>
           Let's Go!
         </Link>
