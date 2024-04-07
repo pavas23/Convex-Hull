@@ -175,8 +175,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-                    // borderRight: "1px solid black",
-                    // alignContent: "center",
                   }}
                 >
                   Intersection of Half-Spaces
@@ -269,8 +267,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-
-                    // alignContent: "center",
                   }}
                 >
                   Closed Shape:
@@ -295,8 +291,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-
-                    // alignContent: "center",
                   }}
                 >
                   Extreme Points:
@@ -337,8 +331,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-                    // borderRight: "1px solid black",
-                    // alignContent: "center",
                   }}
                 >
                   Computer Graphics
@@ -363,8 +355,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-                    // borderRight: "1px solid black",
-                    // alignContent: "center",
                   }}
                 >
                   Robotics
@@ -389,8 +379,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-                    // borderRight: "1px solid black",
-                    // alignContent: "center",
                   }}
                 >
                   Data Visualization
@@ -415,8 +403,6 @@ function Introduction() {
                     marginRight: "5px",
                     fontWeight: "bolder",
                     flex: "0 0 15%",
-                    // borderRight: "1px solid black",
-                    // alignContent: "center",
                   }}
                 >
                   Pattern Recognition

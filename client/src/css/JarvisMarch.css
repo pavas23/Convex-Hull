@@ -7,16 +7,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* position: relative; */
   overflow: hidden;
   z-index: -1;
-  /* margin: 10px; */
 }
 
 canvas {
   height: 450px;
   width: 900px;
-  /* border: 2px solid #333; */
   background-color: #fff;
   margin-top: 1%;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 25px 50px -10px,
@@ -162,18 +159,15 @@ canvas {
   color: #666666;
 }
 
-/* Hide the default file input */
 input[type="file"] {
   display: none;
 }
 
-/* Style the custom file input container */
 .custom-file-input-container {
   position: relative;
   display: inline-block;
 }
 
-/* Style the button to resemble the file input */
 .custom-file-input-button {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
@@ -182,7 +176,6 @@ input[type="file"] {
   cursor: pointer;
 }
 
-/* Style the label for the file input */
 .custom-file-input-label {
-  margin-left: 10px; /* Adjust spacing as needed */
+  margin-left: 10px;
 }

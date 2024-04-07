@@ -1,3 +1,12 @@
+/**
+ * ## Team Members
+- Atharva Dashora (2021A7PS0127H)
+- Dev Gala (2021A7PS0182H)
+- Pavas Garg (2021A7PS2587H)
+- Tushar Raghani (2021A7PS1404H)
+- Vassvik Sai Reddy Jampala (2021A7PS0109H)
+ */
+
 import React from "react";
 import JarvisMarch from "./components/JarvisMarch";
 import LandingPage from "./components/LandingPage";

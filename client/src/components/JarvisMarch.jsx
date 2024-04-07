@@ -213,7 +213,7 @@ function JarvisMarch() {
       if (finalTillNow.length > 0) {
         const pq = finalTillNow[finalTillNow.length - 1];
         const qr = edge;
-        //if both have atmost one common point
+        // if both have atmost one common point
         if (
           !(
             (pq.p1.x === qr.p1.x &&

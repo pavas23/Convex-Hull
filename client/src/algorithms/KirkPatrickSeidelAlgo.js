@@ -133,20 +133,12 @@ function upperBridge(T, a) {
 }
 
 function upperHull(pumin, pumax, T) {
-    // console.log("begin")
-    // if(pumin.x>pumax.x){
-    //     var temp = pumin
-    //     pumin = pumax
-    //     pumax = temp
-    // }
-    // console.log(pumin, pumax, T)
     if (Point.equals(pumin, pumax)) return [pumin];
 
     var a = nthSmallestPoints(T, Math.ceil(T.length / 2));
 
     var bridge = upperBridge(T, a);
-    // console.log("bridge", bridge)
-    if (bridge.length === 1) return [pumin, pumax] //unecessary but there for security
+    if (bridge.length === 1) return [pumin, pumax]
     var pl = bridge[0]
     var pr = bridge[1]
     if (pl.x > pr.x) {
@@ -182,8 +174,6 @@ function upperHull(pumin, pumax, T) {
 
     }
 
-    // console.log("see left", pumin, pl, T_left)
-    // console.log("see right", pr, pumax, T_right)
     var leftList = (Point.equals(pumin, pl)) ? [pl] : upperHull(pumin, pl, T_left)
     var rightList = (Point.equals(pumax, pr)) ? [pr] : upperHull(pr, pumax, T_right)
     return [...leftList, ...rightList]
@@ -262,75 +252,5 @@ function KirkPatrickSeidelAlgorithm(points) {
 
     return edges;
 }
-// const fs = require('fs');
 
-
-// function minMaxScaling(value, minValue, maxValue, newMin, newMax) {
-//     return (
-//       ((value - minValue) / (maxValue - minValue)) * (newMax - newMin) + newMin
-//     );
-//   }
-
-// function convert(csvFilePath){
-//     // var canvas = document.getElementById("canvas");
-//     // var ctx = document.getElementById("canvas").getContext("2d");
-//     // const rect = canvas.getBoundingClientRect();
-
-//     // var scaleX = canvas.width / rect.width; // relationship bitmap vs. element for x
-//     // var scaleY = canvas.height / rect.height;
-//     // var radius = rect.height / 10;
-
-//     // setHeight(rect.height);
-//     // setScaleYState(scaleY);
-
-//     // const file = event.target.files[0];
-//     // const reader = new FileReader();
-//     var ptsArr = [];
-
-//     const contents = fs.readFileSync(csvFilePath, 'utf8');
-//     var rows = contents.split("\n");
-//     var ptsArr = [];
-//     const data = rows.map((row) => {
-//     //   console.log(row);
-//       const values = row.split(",");
-//       const pt_x = parseFloat(values[0]);
-//       const pt_y = parseFloat(values[1]);
-//       ptsArr = [...ptsArr, { x: pt_x, y: pt_y }];
-//     });
-
-//     // const minX = Math.min(...ptsArr.map((point) => point.x));
-//     // const maxX = Math.max(...ptsArr.map((point) => point.x));
-//     // const minY = Math.min(...ptsArr.map((point) => point.y));
-//     // const maxY = Math.max(...ptsArr.map((point) => point.y));
-
-//     // const scaledPtsArr = ptsArr.map((point) => ({
-//     //   x:
-//     //     minMaxScaling(point.x, minX - 5, maxX + 5, 0, 1) *
-//     //     (rect.right - rect.left + 1) *
-//     //     scaleX,
-//     //   y:
-//     //     (rect.height -
-//     //       minMaxScaling(point.y, minY - 5, maxY + 5, 0, 1) *
-//     //         (rect.bottom - rect.top + 1)) *
-//     //     scaleY,
-//     // }));
-
-//     const scaledNewPts = [];
-//     for (var point of ptsArr) {
-//       scaledNewPts.push(new Point(point.x, point.y));
-//     //   console.log(point);
-//     //   ctx.fillStyle = "blue";
-//     //   ctx.beginPath();
-//     //   ctx.arc(point.x, rect.height * scaleY - point.y, 3, 0, Math.PI * 2);
-//     //   ctx.fill();
-//     }
-
-//     // console.log("scaled points are", scaledNewPts);
-//     return scaledNewPts;
-// }
-
-
-
-// var ans = KirkPatrickSeidelAlgorithm(convert("/Users/atharvadashora/Downloads/DAA-Assignment1/__test__/random_100000_points.csv"))
-// console.log(ans)
 module.exports = KirkPatrickSeidelAlgorithm;
