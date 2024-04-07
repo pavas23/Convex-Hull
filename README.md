@@ -7,7 +7,7 @@ The convex hull of a set of points in space is essentially the smallest "shape" 
 - Jarvis March Algorithm
 - Kirk Patrick Seidel Algorithm
 
-## How to Run 
+## How to Run Locally
 
 Go to client directory
 
@@ -27,9 +27,8 @@ npm run start
 ```
 
 ## Team Members
-- Atharva Dashora (2021A7PS0127H)
-- Dev Gala (2021A7PS0182H)
-- Pavas Garg (2021A7PS2587H)
-- Tushar Raghani (2021A7PS1404H)
-- Vassvik Sai Reddy Jampala (2021A7PS0109H)
+- [Pavas Garg](https://www.github.com/pavas23)
+- [Dev Gala](https://github.com/devgala)
+- [Atharva Dashora](https://github.com/goldengod-1)
+- [Tushar Raghani](https://github.com/Tushar-015)
 
